@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter.ui.Analytics
+package com.stepupcounter.stepupcounter.ui.analytics
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

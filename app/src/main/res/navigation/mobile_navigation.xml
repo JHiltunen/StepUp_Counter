@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_analytics"
-        android:name="com.stepupcounter.stepupcounter.ui.Analytics.AnalyticsFragment"
+        android:name="com.stepupcounter.stepupcounter.ui.analytics.AnalyticsFragment"
         android:label="@string/title_analytics"
         tools:layout="@layout/fragment_analytics" />
 
