@@ -49,4 +49,7 @@ dependencies {
 
     // add reference to circular progressbar to animate number of steps
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+    // gson api to convert object to json and back
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'joda-time:joda-time:2.10.6'
 }

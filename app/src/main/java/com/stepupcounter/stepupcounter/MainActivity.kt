@@ -3,6 +3,7 @@ package com.stepupcounter.stepupcounter
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,12 +12,15 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.stepupcounter.stepupcounter.utils.Steps
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     // request code for PHYSICAL_ACTIVITY
     // the code can be any number
     private val PHYSICAL_ACTIVITY = 100
+    private val steps = Steps()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

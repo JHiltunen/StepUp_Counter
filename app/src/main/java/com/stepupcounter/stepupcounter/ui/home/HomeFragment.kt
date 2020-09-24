@@ -1,7 +1,6 @@
 package com.stepupcounter.stepupcounter.ui.home
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -13,22 +12,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.stepupcounter.stepupcounter.R
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
+import com.stepupcounter.stepupcounter.utils.Steps
+import org.joda.time.DateTime
+import org.joda.time.Days
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class HomeFragment : Fragment(), SensorEventListener {
 
+    private val TAG = "HomeFragment"
     private lateinit var homeViewModel: HomeViewModel
+    private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
 
+    private var steps : Steps = Steps()
     // count number os steps as float value because progress bar animation needs float values
     private var totalStepsSinceLastRebootOfDevice= 0f
-    private var previousTotalSteps = 0f
     private var running = false
+
+    var sdf : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +56,8 @@ class HomeFragment : Fragment(), SensorEventListener {
         // find the TextView element (that shows value of steps) from root
         tv_stepsCount = root.findViewById(R.id.tv_stepsTaken) as TextView
 
-        loadData()
-        resetSteps()
+        steps = sharedPreferencesManager.loadData(this.requireActivity().applicationContext)
+
 
         return root
     }
@@ -63,12 +71,16 @@ class HomeFragment : Fragment(), SensorEventListener {
         if (stepSensor == null) {
             // step sensor not found on some (older) devices
             // we need to use requireActivity() method to access context that's needed on Toast
-            Toast.makeText(this.requireActivity().applicationContext, "No sensor detected on this device", Toast.LENGTH_LONG).show()
-            Log.d("Steps", "Sensor not found")
+            Toast.makeText(
+                this.requireActivity().applicationContext,
+                "No sensor detected on this device",
+                Toast.LENGTH_LONG
+            ).show()
+            Log.d(TAG, "Sensor not found")
         } else {
             // add listener for the sensor we use
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
-            Log.d("Steps", "Added listener")
+            Log.d(TAG, "Added listener")
         }
     }
 
@@ -84,23 +96,54 @@ class HomeFragment : Fragment(), SensorEventListener {
             // value of sensor is at index 0
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
 
-            // previousTotalSteps is retrieved from sharedPreferences on loadData function when creating the view
-            // currentSteps = totalStepsSinceLastRebootOfDevice - previousTotalSteps
-            val currentSteps : Int = totalStepsSinceLastRebootOfDevice.toInt() - previousTotalSteps.toInt()
+            Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
+
+            if (steps.getPreviousSteps() == -1f) {
+                steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
+            }
+
+            var currentSteps : Int = totalStepsSinceLastRebootOfDevice.toInt() - steps.getPreviousSteps().toInt()
+
+            if (totalStepsSinceLastRebootOfDevice == 0f) {
+                currentSteps = totalStepsSinceLastRebootOfDevice.toInt() + steps.getStepsFromSpecificDate(sdf.format(Date())).toInt()
+            }
+
+            Log.d(TAG, "previousStepsValue: " + steps.getPreviousSteps())
             Log.d(
-                "Steps",
-                "totalStepsSinceLastRebootOfDevice: $totalStepsSinceLastRebootOfDevice : currentSteps: $currentSteps"
+                TAG,
+                "currentSteps: $currentSteps"
             )
             tv_stepsCount.text = currentSteps.toString()
 
-            Log.d("Steps", "currentSteps: $currentSteps")
-            // update progressbar animation
-            progress_circular.apply {
-                setProgressWithAnimation(currentSteps.toFloat())
-                Log.d("Steps", "setProgressWithAnimation")
+            val currentDate = Date()
+            val lastDate : Date = sdf.parse(steps.getLastDate())
+
+            val currentDateTime = DateTime(currentDate)
+            val lastDateTime = DateTime(lastDate)
+
+            // Joda
+            Log.d(
+                TAG,
+                "currentDate: " + currentDate + "; lastSavedDate: " + lastDate + " date.before(currentdate): " + lastDate.before(
+                    currentDate
+                )
+            )
+            // if last date saved to LinkedHashMap is before current date we need to reset steps count becauuse
+            if (Days.daysBetween(lastDateTime, currentDateTime).days == 0) {
+                Log.d(TAG, "Sama päivä")
+                steps.addValue(sdf.format(Date()), currentSteps.toFloat())
+                sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
+            } else {
+                resetSteps()
             }
+            Log.d(TAG, "currentSteps: $currentSteps")
+            // update progressbar animation
+            //progress_circular.apply {
+              //  setProgressWithAnimation(currentSteps.toFloat())
+                //Log.d(TAG, "setProgressWithAnimation")
+            // }
         } else {
-            Log.d("Steps", "Event null")
+            Log.d(TAG, "Event null")
         }
     }
 
@@ -117,48 +160,29 @@ class HomeFragment : Fragment(), SensorEventListener {
      * Assign onLongClickListener to actually reset the value and then save the data to shared preferences by calling saveData() function.
      */
     private fun resetSteps() {
+        tv_stepsCount.text = 0.toString()
+        steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
+        steps.addValue(sdf.format(Date()), 0f)
+        // call saveData to save it to SharedPreferences
+        sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
+
         // when clicked the element that holds value of steps, show message how to reset the value
         tv_stepsCount.setOnClickListener {
-            Toast.makeText(this.requireActivity().applicationContext, "Long tap to reset steps", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this.requireActivity().applicationContext,
+                "Long tap to reset steps",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         tv_stepsCount.setOnLongClickListener {
-            previousTotalSteps = totalStepsSinceLastRebootOfDevice
             tv_stepsCount.text = 0.toString()
+            steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
+            steps.addValue(sdf.format(Date()), 0f)
             // call saveData to save it to SharedPreferences
-            saveData()
+            sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
 
             true
         }
-    }
-
-    /**
-     * Loads the number of steps saved to shared preferences with the key "key1"
-     * Name of sharedPrefrences is "myPrefs"
-     */
-    private fun loadData() {
-        // loads steps count from shared preferences
-        val sharedPrefrences : SharedPreferences = this.requireActivity().getSharedPreferences(
-            "myPrefs",
-            Context.MODE_PRIVATE
-        )
-        val savedNumber : Float = sharedPrefrences.getFloat("key1", 0f)
-        Log.d("Steps", "$savedNumber")
-        previousTotalSteps = savedNumber
-    }
-
-    /**
-     * Saves the number of steps in the shared preferences with the key "key1"
-     * Name of sharedPrefrences is "myPrefs"
-     */
-    private fun saveData() {
-        val sharedPrefrences : SharedPreferences = this.requireActivity().getSharedPreferences(
-            "myPrefs",
-            Context.MODE_PRIVATE
-        )
-        val editor : SharedPreferences.Editor = sharedPrefrences.edit()
-        editor.putFloat("key1", previousTotalSteps)
-        editor.apply()
-        Log.d("Steps", "saved data")
     }
 }
