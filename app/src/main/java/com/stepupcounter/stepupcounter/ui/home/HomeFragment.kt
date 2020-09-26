@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.stepupcounter.stepupcounter.R
 import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
 import com.stepupcounter.stepupcounter.utils.Steps
+import kotlinx.coroutines.processNextEventInCurrentThread
 import org.joda.time.DateTime
 import org.joda.time.Days
 import java.text.SimpleDateFormat
@@ -99,14 +100,27 @@ class HomeFragment : Fragment(), SensorEventListener {
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
 
             if (steps.getPreviousSteps() == -1f) {
+                Log.d(TAG, "Asetetaan previousStepsValueksi sensorin arvo: $totalStepsSinceLastRebootOfDevice")
                 steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
             }
 
-            var currentSteps : Int = totalStepsSinceLastRebootOfDevice.toInt() - steps.getPreviousSteps().toInt()
+            var currentSteps: Int
 
             if (totalStepsSinceLastRebootOfDevice == 0f) {
-                currentSteps = totalStepsSinceLastRebootOfDevice.toInt() + steps.getStepsFromSpecificDate(sdf.format(Date())).toInt()
+                // in case where sensor value is zero
+                currentSteps = steps.getStepsFromSpecificDate(sdf.format(Date())).toInt()
+                steps.setpreviousStepsValue(currentSteps.toFloat())
+                Log.d(TAG, "Asetetaan previousSteps arvoksi: $currentSteps")
+            } else {
+                if (totalStepsSinceLastRebootOfDevice > steps.getStepsFromSpecificDate(sdf.format(Date()))) {
+                    Log.d(TAG, "EKA IF")
+                    currentSteps = totalStepsSinceLastRebootOfDevice.toInt() - steps.getPreviousSteps().toInt()
+                } else {
+                    Log.d(TAG, "ELSE IF")
+                    currentSteps = steps.getPreviousSteps().toInt() + totalStepsSinceLastRebootOfDevice.toInt()
+                }
             }
+
 
             Log.d(TAG, "previousStepsValue: " + steps.getPreviousSteps())
             Log.d(
@@ -136,7 +150,6 @@ class HomeFragment : Fragment(), SensorEventListener {
             } else {
                 resetSteps()
             }
-            Log.d(TAG, "currentSteps: $currentSteps")
             // update progressbar animation
             //progress_circular.apply {
               //  setProgressWithAnimation(currentSteps.toFloat())
@@ -165,24 +178,5 @@ class HomeFragment : Fragment(), SensorEventListener {
         steps.addValue(sdf.format(Date()), 0f)
         // call saveData to save it to SharedPreferences
         sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
-
-        // when clicked the element that holds value of steps, show message how to reset the value
-        tv_stepsCount.setOnClickListener {
-            Toast.makeText(
-                this.requireActivity().applicationContext,
-                "Long tap to reset steps",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        tv_stepsCount.setOnLongClickListener {
-            tv_stepsCount.text = 0.toString()
-            steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
-            steps.addValue(sdf.format(Date()), 0f)
-            // call saveData to save it to SharedPreferences
-            sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
-
-            true
-        }
     }
 }
