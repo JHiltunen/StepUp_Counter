@@ -15,9 +15,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.stepupcounter.stepupcounter.R
+import com.stepupcounter.stepupcounter.utils.Logger
 import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
 import com.stepupcounter.stepupcounter.utils.Steps
-import kotlinx.coroutines.processNextEventInCurrentThread
 import org.joda.time.DateTime
 import org.joda.time.Days
 import java.text.SimpleDateFormat
@@ -31,6 +31,8 @@ class HomeFragment : Fragment(), SensorEventListener {
     private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
+
+    private var logger : Logger = Logger()
 
     private var steps : Steps = Steps()
     // count number os steps as float value because progress bar animation needs float values
@@ -107,17 +109,29 @@ class HomeFragment : Fragment(), SensorEventListener {
             var currentSteps: Int
 
             if (totalStepsSinceLastRebootOfDevice == 0f) {
+                Log.d(TAG, "Sensorin arvo on nolla")
                 // in case where sensor value is zero
                 currentSteps = steps.getStepsFromSpecificDate(sdf.format(Date())).toInt()
+                logger.appendLog(this.requireActivity().applicationContext, "Sensor value is zero ->")
+                logger.appendLog(this.requireActivity().applicationContext,"Setting previousStepsValue to $currentSteps")
                 steps.setpreviousStepsValue(currentSteps.toFloat())
-                Log.d(TAG, "Asetetaan previousSteps arvoksi: $currentSteps")
+                logger.appendLog(this.requireActivity().applicationContext,"totalStepsSinceLastRebootOfDevice: $totalStepsSinceLastRebootOfDevice Saved steps value from ${sdf.format(Date())}: ${steps.getStepsFromSpecificDate(sdf.format(Date()))}; CurrentSteps = $currentSteps")
+                logger.appendLog(this.requireActivity().applicationContext,"--------------------------------------------------------")
             } else {
                 if (totalStepsSinceLastRebootOfDevice > steps.getStepsFromSpecificDate(sdf.format(Date()))) {
-                    Log.d(TAG, "EKA IF")
+                    Log.d(TAG, "totalStepsSinceLastRebootOfDevice > steps.getStepsFromSpecificDate(sdf.format(Date()))")
+                    logger.appendLog(this.requireActivity().applicationContext, "totalStepsSinceLastRebootOfDevice > steps.getStepsFromSpecificDate(sdf.format(Date())) ->")
                     currentSteps = totalStepsSinceLastRebootOfDevice.toInt() - steps.getPreviousSteps().toInt()
+                    logger.appendLog(this.requireActivity().applicationContext,"totalStepsSinceLastRebootOfDevice: $totalStepsSinceLastRebootOfDevice Saved steps value from ${sdf.format(Date())}: ${steps.getStepsFromSpecificDate(sdf.format(Date()))}")
+                    logger.appendLog(this.requireActivity().applicationContext,"Lasketaan: totalStepsSinceLastRebootOfDevice - steps.getPreviousSteps(): $totalStepsSinceLastRebootOfDevice - ${steps.getPreviousSteps()} = $currentSteps")
+                    logger.appendLog(this.requireActivity().applicationContext,"--------------------------------------------------------")
                 } else {
-                    Log.d(TAG, "ELSE IF")
+                    Log.d(TAG, "ELSE")
+                    Log.d(TAG, "ELSE haara")
                     currentSteps = steps.getPreviousSteps().toInt() + totalStepsSinceLastRebootOfDevice.toInt()
+                    logger.appendLog(this.requireActivity().applicationContext,"totalStepsSinceLastRebootOfDevice: $totalStepsSinceLastRebootOfDevice Previous steps: ${steps.getPreviousSteps()}")
+                    logger.appendLog(this.requireActivity().applicationContext,"Lasketaan: steps.getPreviousSteps + totalStepsSinceLastRebootOfDevice: ${steps.getPreviousSteps()} + ${totalStepsSinceLastRebootOfDevice} = $currentSteps")
+                    logger.appendLog(this.requireActivity().applicationContext,"--------------------------------------------------------")
                 }
             }
 
