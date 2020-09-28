@@ -37,7 +37,6 @@ class AnalyticsFragment : Fragment() {
 
         barChart = root.findViewById(R.id.fragment_verticalbarchart_chart)
 
-        analyticsViewModel = ViewModelProvider(this).get(AnalyticsViewModel::class.java)
         configureChartAppearance()
 
         return root
