@@ -15,11 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.stepupcounter.stepupcounter.R
-import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
-import com.stepupcounter.stepupcounter.utils.Steps
-import org.joda.time.DateTime
-import org.joda.time.Days
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -27,16 +22,12 @@ class HomeFragment : Fragment(), SensorEventListener {
 
     private val TAG = "HomeFragment"
     private lateinit var homeViewModel: HomeViewModel
-    private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
 
-    private var steps : Steps = Steps()
     // count number os steps as float value because progress bar animation needs float values
     private var totalStepsSinceLastRebootOfDevice= 0f
     private var running = false
-
-    var sdf : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,8 +47,7 @@ class HomeFragment : Fragment(), SensorEventListener {
         // find the TextView element (that shows value of steps) from root
         tv_stepsCount = root.findViewById(R.id.tv_stepsTaken) as TextView
 
-        steps = sharedPreferencesManager.loadData(this.requireActivity().applicationContext)
-
+        tv_stepsCount.text = homeViewModel.stepsCount.toString()
 
         return root
     }
@@ -98,59 +88,9 @@ class HomeFragment : Fragment(), SensorEventListener {
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
 
-            if (steps.getPreviousSteps() == -1f) {
-                Log.d(TAG, "Asetetaan previousStepsValueksi sensorin arvo: $totalStepsSinceLastRebootOfDevice")
-                steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
-            }
+            homeViewModel.calculateSteps(totalStepsSinceLastRebootOfDevice)
+            tv_stepsCount.text = homeViewModel.stepsCount.toString()
 
-            var currentSteps: Int
-
-            if (totalStepsSinceLastRebootOfDevice == 0f) {
-                Log.d(TAG, "Sensorin arvo on nolla")
-                // in case where sensor value is zero
-                currentSteps = steps.getStepsFromSpecificDate(sdf.format(Date())).toInt()
-                steps.setpreviousStepsValue(currentSteps.toFloat())
-            } else {
-                if (totalStepsSinceLastRebootOfDevice > steps.getStepsFromSpecificDate(sdf.format(Date()))) {
-                    Log.d(TAG, "totalStepsSinceLastRebootOfDevice > steps.getStepsFromSpecificDate(sdf.format(Date()))")
-                    currentSteps = totalStepsSinceLastRebootOfDevice.toInt() - steps.getPreviousSteps().toInt()
-
-                } else {
-                    Log.d(TAG, "ELSE")
-                    Log.d(TAG, "ELSE haara")
-                    currentSteps = steps.getPreviousSteps().toInt() + totalStepsSinceLastRebootOfDevice.toInt()
-                }
-            }
-
-
-            Log.d(TAG, "previousStepsValue: " + steps.getPreviousSteps())
-            Log.d(
-                TAG,
-                "currentSteps: $currentSteps"
-            )
-            tv_stepsCount.text = currentSteps.toString()
-
-            val currentDate = Date()
-            val lastDate : Date = sdf.parse(steps.getLastDate())
-
-            val currentDateTime = DateTime(currentDate)
-            val lastDateTime = DateTime(lastDate)
-
-            // Joda
-            Log.d(
-                TAG,
-                "currentDate: " + currentDate + "; lastSavedDate: " + lastDate + " date.before(currentdate): " + lastDate.before(
-                    currentDate
-                )
-            )
-            // if last date saved to LinkedHashMap is before current date we need to reset steps count becauuse
-            if (Days.daysBetween(lastDateTime, currentDateTime).days == 0) {
-                Log.d(TAG, "Sama päivä")
-                steps.addValue(sdf.format(Date()), currentSteps.toFloat())
-                sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
-            } else {
-                resetSteps()
-            }
             // update progressbar animation
             //progress_circular.apply {
               //  setProgressWithAnimation(currentSteps.toFloat())
@@ -166,18 +106,5 @@ class HomeFragment : Fragment(), SensorEventListener {
      */
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
 
-    }
-
-    /**
-     * Fuction to reset steps to zero (0).
-     * Assigns onClickListener to tv_stepsCount TextView to show message, how to reset steps.
-     * Assign onLongClickListener to actually reset the value and then save the data to shared preferences by calling saveData() function.
-     */
-    private fun resetSteps() {
-        tv_stepsCount.text = 0.toString()
-        steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
-        steps.addValue(sdf.format(Date()), 0f)
-        // call saveData to save it to SharedPreferences
-        sharedPreferencesManager.saveData(this.requireActivity().applicationContext, steps)
     }
 }
