@@ -2,6 +2,7 @@ package com.stepupcounter.stepupcounter.utils
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 
 class Steps {
@@ -17,7 +18,7 @@ class Steps {
         daysAndSteps.put(date, value)
     }
 
-    fun setpreviousStepsValue(stepCount : Float) {
+    fun setpreviousStepsValue(stepCount: Float) {
         previousStepsValue = stepCount
     }
 
@@ -25,11 +26,11 @@ class Steps {
         return previousStepsValue
     }
 
-    fun setPreviousStepsValueToLastSavedValue(stepsValue : Float) {
+    fun setPreviousStepsValueToLastSavedValue(stepsValue: Float) {
         previousStepsValue = stepsValue
     }
 
-    fun getStepsFromSpecificDate(date : String) : Float {
+    fun getStepsFromSpecificDate(date: String) : Float {
         return daysAndSteps.getOrDefault(date, 0f)
     }
 
@@ -40,6 +41,15 @@ class Steps {
 
     fun getDaysAndSteps() : LinkedHashMap<String, Float> {
         return daysAndSteps
+    }
+
+    fun getDaysAsArray(): Array<String> {
+        return daysAndSteps.keys.toTypedArray()
+    }
+
+    fun getStepsAsList(): ArrayList<Float> {
+        val values: Collection<Float> = daysAndSteps.values
+        return ArrayList(values)
     }
 
     override fun toString(): String {
