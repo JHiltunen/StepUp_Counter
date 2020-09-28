@@ -20,8 +20,6 @@ class MainActivity : AppCompatActivity() {
     // request code for PHYSICAL_ACTIVITY
     // the code can be any number
     private val PHYSICAL_ACTIVITY = 100
-    private val EXTERNAL_WRITE = 101
-    private val EXTERNAL_READ = 102
     private val steps = Steps()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,20 +45,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             // User has already given the permission
             Toast.makeText(this, "Permission is already provided", Toast.LENGTH_SHORT).show()
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), EXTERNAL_WRITE)
-        } else {
-            // User has already given the permission
-            Toast.makeText(this, "Write permission already granted", Toast.LENGTH_SHORT).show()
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), EXTERNAL_READ)
-        } else {
-            // User has already given the permission
-            Toast.makeText(this, "Read permission already granted", Toast.LENGTH_SHORT).show()
         }
     }
 }
