@@ -56,7 +56,6 @@
         android:layout_centerInParent="true"
         app:cpb_background_progressbar_color="#F2F2F2"
         app:cpb_background_progressbar_width="20dp"
-        app:cpb_progress_max="2500"
         app:cpb_progressbar_color="#F44336"
         app:cpb_progressbar_width="15dp"
         app:cpb_round_border="true"

@@ -14,8 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.stepupcounter.stepupcounter.R
-import java.util.*
 
 
 class HomeFragment : Fragment(), SensorEventListener {
@@ -24,6 +24,7 @@ class HomeFragment : Fragment(), SensorEventListener {
     private lateinit var homeViewModel: HomeViewModel
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
+    private lateinit var circularProgressBar : CircularProgressBar
 
     // count number os steps as float value because progress bar animation needs float values
     private var totalStepsSinceLastRebootOfDevice= 0f
@@ -41,6 +42,8 @@ class HomeFragment : Fragment(), SensorEventListener {
         homeViewModel.text.observe(viewLifecycleOwner, {
             textView.text = it
         })
+
+        circularProgressBar = root.findViewById(R.id.progress_circular)
 
         // get the SensorManager when creating the view
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -91,11 +94,12 @@ class HomeFragment : Fragment(), SensorEventListener {
             homeViewModel.calculateSteps(totalStepsSinceLastRebootOfDevice)
             tv_stepsCount.text = homeViewModel.stepsCount.toString()
 
+            circularProgressBar.progressMax = 16500f
             // update progressbar animation
-            //progress_circular.apply {
-              //  setProgressWithAnimation(currentSteps.toFloat())
-                //Log.d(TAG, "setProgressWithAnimation")
-            // }
+            circularProgressBar.apply {
+                setProgressWithAnimation(tv_stepsCount.text.toString().toFloat())
+            }
+
         } else {
             Log.d(TAG, "Event null")
         }
