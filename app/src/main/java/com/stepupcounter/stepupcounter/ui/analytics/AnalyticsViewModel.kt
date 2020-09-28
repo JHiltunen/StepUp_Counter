@@ -16,11 +16,6 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
     private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
     private lateinit var steps : Steps
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is analytics Fragment"
-    }
-    val text: LiveData<String> = _text
-
     init {
         labelNames = ArrayList()
     }

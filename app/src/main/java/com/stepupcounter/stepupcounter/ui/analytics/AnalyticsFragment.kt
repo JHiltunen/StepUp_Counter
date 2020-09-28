@@ -34,10 +34,6 @@ class AnalyticsFragment : Fragment() {
         analyticsViewModel =
                 ViewModelProvider(this).get(AnalyticsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_analytics, container, false)
-        val textView: TextView = root.findViewById(R.id.text_analytics)
-        analyticsViewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
-        })
 
         barChart = root.findViewById(R.id.fragment_verticalbarchart_chart)
 
