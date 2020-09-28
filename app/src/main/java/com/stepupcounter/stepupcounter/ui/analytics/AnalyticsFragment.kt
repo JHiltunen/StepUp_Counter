@@ -23,18 +23,8 @@ import java.text.SimpleDateFormat
 
 class AnalyticsFragment : Fragment() {
 
-    private lateinit var steps : Steps
-    private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
-    private val sdf : SimpleDateFormat = SimpleDateFormat("dd.MM.")
-    private val sdfYearMonthDay : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-
     private lateinit var analyticsViewModel: AnalyticsViewModel
-    private val SET_LABEL = "Steps count"
-
     private lateinit var barChart : BarChart
-    private var labelNames: ArrayList<String>? = null
-    private var stepsCountArrayList: ArrayList<Float> = ArrayList()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,21 +40,21 @@ class AnalyticsFragment : Fragment() {
         })
 
         barChart = root.findViewById(R.id.fragment_verticalbarchart_chart)
-        steps = sharedPreferencesManager.loadData(this.requireActivity().applicationContext)
-        labelNames = ArrayList()
 
+        analyticsViewModel = ViewModelProvider(this).get(AnalyticsViewModel::class.java)
         configureChartAppearance()
 
         return root
     }
 
-
     private fun configureChartAppearance() {
-        val barDataSet = BarDataSet(createChartDataFromSharedPreferences(), "Daily steps")
+        val barDataSet = BarDataSet(analyticsViewModel.createChartDataFromSharedPreferences(), "Daily steps")
         barDataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
         val description = Description()
         description.text = "Steps"
         barChart.description = description
+
+        val labelNames = analyticsViewModel.getLabelNames()
 
         val xAxis: XAxis = barChart.xAxis
         xAxis.valueFormatter = IndexAxisValueFormatter(labelNames)
@@ -72,26 +62,11 @@ class AnalyticsFragment : Fragment() {
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
         xAxis.granularity = 1f
-        xAxis.labelCount = labelNames!!.size
-        barChart.animateY(2000)
+        xAxis.labelCount = labelNames.size
 
         val barData = BarData(barDataSet)
         barChart.data = barData
         barData.setValueTextSize(12f)
         barChart.invalidate()
-    }
-
-    private fun createChartDataFromSharedPreferences(): ArrayList<BarEntry> {
-        val stepsData : ArrayList<BarEntry> = ArrayList()
-        val dates : Array<String> = steps.getDaysAsArray()
-        stepsCountArrayList = steps.getStepsAsList()
-        for (i in stepsCountArrayList.indices) {
-            val date: String = sdf.format(sdfYearMonthDay.parse(dates[i]))
-            val stepsCountArrayList = stepsCountArrayList[i]
-            stepsData.add(BarEntry(i.toFloat(), stepsCountArrayList))
-            labelNames!!.add(date)
-        }
-
-        return stepsData
     }
 }
