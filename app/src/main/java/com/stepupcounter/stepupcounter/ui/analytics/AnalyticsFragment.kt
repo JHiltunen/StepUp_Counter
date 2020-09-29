@@ -58,6 +58,7 @@ class AnalyticsFragment : Fragment() {
         xAxis.setDrawAxisLine(false)
         xAxis.granularity = 1f
         xAxis.labelCount = labelNames.size
+        barChart.extraBottomOffset = -50f
 
         val barData = BarData(barDataSet)
         barChart.data = barData
