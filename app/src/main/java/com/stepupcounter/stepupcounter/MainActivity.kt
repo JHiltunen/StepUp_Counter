@@ -3,9 +3,6 @@ package com.stepupcounter.stepupcounter
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -14,14 +11,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.stepupcounter.stepupcounter.utils.Steps
+import com.stepupcounter.stepupcounter.utils.Person
 
 class MainActivity : AppCompatActivity() {
 
     // request code for PHYSICAL_ACTIVITY
     // the code can be any number
     private val PHYSICAL_ACTIVITY = 100
-    private val steps = Steps()
+    private val steps = Person()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_analytics, R.id.navigation_exercise
+                R.id.navigation_home, R.id.navigation_analytics, R.id.navigation_information
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

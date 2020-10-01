@@ -2,7 +2,13 @@
     <string name="app_name">StepUp Counter</string>
     <string name="title_home">Home</string>
     <string name="title_analytics">Analytics</string>
-    <string name="title_exercise">Exercise</string>
+    <string name="title_information">Information</string>
     <string name="stepCount_default">0</string>
     <string name="stepGoal_default">2500</string>
+    <string name="height_cm">Height (cm)</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="text_gender">"Gender: "</string>
+    <string name="save_btn">Save</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
 </resources>

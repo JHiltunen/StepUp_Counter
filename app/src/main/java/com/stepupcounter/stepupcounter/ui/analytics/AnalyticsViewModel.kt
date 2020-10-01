@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.github.mikephil.charting.data.BarEntry
 import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
-import com.stepupcounter.stepupcounter.utils.Steps
+import com.stepupcounter.stepupcounter.utils.Person
 import java.text.SimpleDateFormat
 
 class AnalyticsViewModel(application: Application) : AndroidViewModel(application) {
@@ -14,18 +14,18 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
     private var labelNames: ArrayList<String>? = null
 
     private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
-    private lateinit var steps : Steps
+    private lateinit var person : Person
 
     init {
         labelNames = ArrayList()
     }
 
     fun createChartDataFromSharedPreferences(): ArrayList<BarEntry> {
-        steps = sharedPreferencesManager.loadData(getApplication())
+        person = sharedPreferencesManager.loadData(getApplication())
 
         val stepsData : ArrayList<BarEntry> = ArrayList()
-        val dates : Array<String> = steps.getDaysAsArray()
-        val stepsCountArrayList = steps.getStepsAsList()
+        val dates : Array<String> = person.getDaysAsArray()
+        val stepsCountArrayList = person.getStepsAsList()
 
         for (i in stepsCountArrayList.indices) {
             val date: String = sdf.format(sdfYearMonthDay.parse(dates[i]))

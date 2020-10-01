@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.charts.BarChart
@@ -12,13 +11,9 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.stepupcounter.stepupcounter.R
-import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
-import com.stepupcounter.stepupcounter.utils.Steps
-import java.text.SimpleDateFormat
 
 
 class AnalyticsFragment : Fragment() {
@@ -46,7 +41,7 @@ class AnalyticsFragment : Fragment() {
         val barDataSet = BarDataSet(analyticsViewModel.createChartDataFromSharedPreferences(), "Daily steps")
         barDataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
         val description = Description()
-        description.text = "Steps"
+        description.text = "Person"
         barChart.description = description
 
         val labelNames = analyticsViewModel.getLabelNames()
