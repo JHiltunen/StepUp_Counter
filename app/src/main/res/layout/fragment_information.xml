@@ -4,19 +4,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.information.InformationFragment">
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/text_information"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/height"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:gravity="center|center_horizontal|center_vertical"
+                android:text="@string/height_cm"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/heightan"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:autofillHints="@string/height_cm"
+                android:hint="@string/height_cm"
+                android:inputType="numberSigned"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/weight"
+                android:layout_width="133dp"
+                android:layout_height="57dp"
+                android:gravity="center|center_horizontal|center_vertical"
+                android:text="@string/weight_kg"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/weightan"
+                android:layout_width="wrap_content"
+                android:layout_height="47dp"
+                android:autofillHints="@string/weight_kg"
+                android:hint="@string/weight_kg"
+                android:inputType="numberSigned"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/sex"
+                android:layout_width="wrap_content"
+                android:layout_height="67dp"
+                android:gravity="center|center_horizontal|center_vertical"
+                android:text="@string/text_gender"
+                android:textSize="22sp" />
+
+            <RadioGroup
+                android:id="@+id/gender"
+                android:layout_width="wrap_content"
+                android:layout_height="83dp"
+                android:gravity="center">
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="106dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/female" />
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="97dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/male" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_btn" />
+        </LinearLayout>
+    </ScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
