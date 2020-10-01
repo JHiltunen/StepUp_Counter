@@ -1,13 +1,30 @@
 package com.stepupcounter.stepupcounter.ui.information
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.stepupcounter.stepupcounter.utils.Person
+import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
 
-class InformationViewModel : ViewModel() {
+class InformationViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is information Fragment"
+    private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
+    private var person : Person = Person()
+
+    var height = 0
+    var weight = 0
+    var gender = 0
+
+    fun loadUserInformation() {
+        person = sharedPreferencesManager.loadData(getApplication())
+        height = person.getHeight()
+        weight = person.getWeight()
+        gender = person.getGender()
     }
-    val text: LiveData<String> = _text
+
+    fun saveUserInformation() {
+        person.setHeight(height)
+        person.setWeight(weight)
+        person.setGender(gender)
+        sharedPreferencesManager.saveData(getApplication(), person)
+    }
 }

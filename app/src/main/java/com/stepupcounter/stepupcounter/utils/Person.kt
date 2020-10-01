@@ -9,7 +9,7 @@ class Person {
 
     private var height : Int = 0
     private var weight : Int = 0
-    private var gender : String = ""
+    private var gender : Int = 0
     private var daysAndSteps: LinkedHashMap<String, Float> = LinkedHashMap<String, Float>()
     private var previousStepsValue : Float = -1f
 
@@ -25,7 +25,7 @@ class Person {
         this.weight = weight
     }
 
-    fun setGender(gender: String) {
+    fun setGender(gender: Int) {
         this.gender = gender
     }
 
@@ -37,7 +37,7 @@ class Person {
         return this.weight
     }
 
-    fun getGender(): String {
+    fun getGender(): Int {
         return this.gender
     }
 
