@@ -47,11 +47,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun calculateSteps(totalStepsSinceLastRebootOfDevice : Float) {
-        if (steps.getPreviousSteps() == -1f) {
-            steps.setpreviousStepsValue(totalStepsSinceLastRebootOfDevice)
-            Log.d(TAG, "Asetetaan previousStepsValueksi sensorin arvo: $totalStepsSinceLastRebootOfDevice")
-        }
-
         val currentSteps: Int
 
         if (totalStepsSinceLastRebootOfDevice == 0f) {
