@@ -5,13 +5,40 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 
-class Steps {
+class Person {
 
+    private var height : Int = 0
+    private var weight : Int = 0
+    private var gender : String = ""
     private var daysAndSteps: LinkedHashMap<String, Float> = LinkedHashMap<String, Float>()
     private var previousStepsValue : Float = -1f
 
     init {
         daysAndSteps.put(SimpleDateFormat("yyyy-MM-dd").format(Date()), 0f)
+    }
+
+    fun setHeight(height: Int) {
+        this.height = height
+    }
+
+    fun setWeight(weight: Int) {
+        this.weight = weight
+    }
+
+    fun setGender(gender: String) {
+        this.gender = gender
+    }
+
+    fun getHeight(): Int {
+        return this.height
+    }
+
+    fun getWeight(): Int {
+        return this.weight
+    }
+
+    fun getGender(): String {
+        return this.gender
     }
 
     fun addValue(date: String, value: Float) {
@@ -53,7 +80,7 @@ class Steps {
     }
 
     override fun toString(): String {
-        return "Steps(daysAndSteps=$daysAndSteps, previousStepsValue=$previousStepsValue)"
+        return "Person(daysAndSteps=$daysAndSteps, previousStepsValue=$previousStepsValue)"
     }
 
 

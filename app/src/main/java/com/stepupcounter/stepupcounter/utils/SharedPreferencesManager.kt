@@ -14,17 +14,17 @@ class SharedPreferencesManager {
     private val gson = Gson()
 
     /**
-     * Saves the number of steps in the shared preferences with the key "steps"
+     * Saves the number of person in the shared preferences with the key "person"
      * Name of sharedPreferences is "myPrefs"
      */
-    fun saveData(context: Context, steps: Steps) {
+    fun saveData(context: Context, person: Person) {
         Log.d(TAG,
             "Saving data to sharedPreferences: SharedPreference name -> $PREFERENECE_NAME with key -> $PREFERENCE_KEY"
         )
         val sharedPreferences : SharedPreferences = context.getSharedPreferences(PREFERENECE_NAME, Context.MODE_PRIVATE)
 
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putString(PREFERENCE_KEY, convertObjectToJson(steps))
+        editor.putString(PREFERENCE_KEY, convertObjectToJson(person))
         editor.apply()
     }
 
@@ -32,7 +32,7 @@ class SharedPreferencesManager {
      * Loads the number of steps saved to shared preferences with the key "key1"
      * Name of sharedPreferences is "myPrefs"
      */
-    fun loadData(context: Context): Steps {
+    fun loadData(context: Context): Person {
         // loads steps count from shared preferences
         val sharedPreferences : SharedPreferences = context.getSharedPreferences(
             PREFERENECE_NAME,
@@ -42,15 +42,15 @@ class SharedPreferencesManager {
         return convertJsonToStepsObject(sharedPreferences.getString(PREFERENCE_KEY, ""))
     }
 
-    private fun convertObjectToJson(steps: Steps): String {
-        Log.d(TAG, "Converting Steps object: ${steps.toString()} to Json")
-        return gson.toJson(steps)
+    private fun convertObjectToJson(person: Person): String {
+        Log.d(TAG, "Converting Person object: ${person.toString()} to Json")
+        return gson.toJson(person)
     }
 
-    private fun convertJsonToStepsObject(json: String?): Steps {
+    private fun convertJsonToStepsObject(json: String?): Person {
         if (!json.isNullOrEmpty()) {
-            return gson.fromJson(json, Steps::class.java)
+            return gson.fromJson(json, Person::class.java)
         }
-        return Steps()
+        return Person()
     }
 }
