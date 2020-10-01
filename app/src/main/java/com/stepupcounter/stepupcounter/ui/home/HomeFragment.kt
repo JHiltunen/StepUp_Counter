@@ -6,6 +6,8 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +59,9 @@ class HomeFragment : Fragment(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
+        homeViewModel.updateStepsCount()
+        tv_stepsCount.text = homeViewModel.stepsCount.toString()
+
         running = true
         // get the Step Counter sensor from sensormanager
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
