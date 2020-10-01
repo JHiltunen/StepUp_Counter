@@ -18,8 +18,8 @@
         tools:layout="@layout/fragment_analytics" />
 
     <fragment
-        android:id="@+id/navigation_exercise"
-        android:name="com.stepupcounter.stepupcounter.ui.exercise.ExerciseFragment"
-        android:label="@string/title_exercise"
-        tools:layout="@layout/fragment_exercise" />
+        android:id="@+id/navigation_information"
+        android:name="com.stepupcounter.stepupcounter.ui.information.InformationFragment"
+        android:label="@string/title_information"
+        tools:layout="@layout/fragment_information" />
 </navigation>

@@ -2,7 +2,7 @@
     <string name="app_name">StepUp Counter</string>
     <string name="title_home">Home</string>
     <string name="title_analytics">Analytics</string>
-    <string name="title_exercise">Exercise</string>
+    <string name="title_information">Information</string>
     <string name="stepCount_default">0</string>
     <string name="stepGoal_default">2500</string>
 </resources>
