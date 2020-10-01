@@ -11,9 +11,4 @@
         android:icon="@drawable/ic_baseline_bar_chart_24"
         android:title="@string/title_analytics" />
 
-    <item
-        android:id="@+id/navigation_exercise"
-        android:icon="@drawable/ic_baseline_sports_volleyball_24"
-        android:title="@string/title_exercise" />
-
 </menu>
