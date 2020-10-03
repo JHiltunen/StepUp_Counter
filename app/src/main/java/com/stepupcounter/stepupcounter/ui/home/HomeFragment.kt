@@ -7,12 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.icu.text.DecimalFormat
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -21,7 +17,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.stepupcounter.stepupcounter.R
 
 
-class HomeFragment : Fragment(), SensorEventListener {
+class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
 
     private val TAG = "HomeFragment"
     private lateinit var homeViewModel: HomeViewModel
@@ -34,25 +30,16 @@ class HomeFragment : Fragment(), SensorEventListener {
     private var totalStepsSinceLastRebootOfDevice= 0f
     private var running = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-
-        circularProgressBar = root.findViewById(R.id.progress_circular)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        circularProgressBar = view.findViewById(R.id.progress_circular)
 
         // get the SensorManager when creating the view
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         // find the TextView element (that shows value of steps) from root
-        tv_stepsCount = root.findViewById(R.id.tv_stepsTaken) as TextView
+        tv_stepsCount = view.findViewById(R.id.tv_stepsTaken) as TextView
         tv_stepsCount.text = homeViewModel.stepsCount.toString()
-        bmiValue = root.findViewById(R.id.bmiValue)
-
-        return root
+        bmiValue = view.findViewById(R.id.bmiValue)
     }
 
     override fun onResume() {

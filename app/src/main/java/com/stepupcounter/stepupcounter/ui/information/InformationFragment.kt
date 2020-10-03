@@ -1,18 +1,15 @@
 package com.stepupcounter.stepupcounter.ui.information
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.stepupcounter.stepupcounter.R
-import kotlinx.android.synthetic.main.fragment_information.*
 
-class InformationFragment : Fragment() {
+class InformationFragment : Fragment(R.layout.fragment_information) {
 
     private lateinit var informationViewModel: InformationViewModel
 
@@ -22,19 +19,13 @@ class InformationFragment : Fragment() {
 
     private lateinit var saveBtn : Button
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        informationViewModel =
-            ViewModelProvider(this).get(InformationViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_information, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        informationViewModel = ViewModelProvider(this).get(InformationViewModel::class.java)
 
-        height = root.findViewById(R.id.heightan)
-        weight = root.findViewById(R.id.weightan)
-        genderRadioGroup = root.findViewById(R.id.gender)
-        saveBtn = root.findViewById(R.id.save)
+        height = view.findViewById(R.id.heightan)
+        weight = view.findViewById(R.id.weightan)
+        genderRadioGroup = view.findViewById(R.id.gender)
+        saveBtn = view.findViewById(R.id.save)
 
         informationViewModel.loadUserInformation()
 
@@ -48,7 +39,5 @@ class InformationFragment : Fragment() {
             informationViewModel.gender = genderRadioGroup.checkedRadioButtonId
             informationViewModel.saveUserInformation()
         }
-
-        return root
     }
 }

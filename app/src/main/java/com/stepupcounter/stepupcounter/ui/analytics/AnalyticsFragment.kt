@@ -1,9 +1,7 @@
 package com.stepupcounter.stepupcounter.ui.analytics
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.charts.BarChart
@@ -16,25 +14,15 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.stepupcounter.stepupcounter.R
 
 
-class AnalyticsFragment : Fragment() {
+class AnalyticsFragment : Fragment(R.layout.fragment_analytics) {
 
     private lateinit var analyticsViewModel: AnalyticsViewModel
     private lateinit var barChart : BarChart
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        analyticsViewModel =
-                ViewModelProvider(this).get(AnalyticsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_analytics, container, false)
-
-        barChart = root.findViewById(R.id.fragment_verticalbarchart_chart)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        analyticsViewModel = ViewModelProvider(this).get(AnalyticsViewModel::class.java)
+        barChart = view.findViewById(R.id.fragment_verticalbarchart_chart)
         configureChartAppearance()
-
-        return root
     }
 
     private fun configureChartAppearance() {
