@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter.utils
+package com.jhiltunen.stepupcounter.utils
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.stepupcounter.stepupcounter.ui.home.HomeFragment"
+        android:name="com.jhiltunen.stepupcounter.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_analytics"
-        android:name="com.stepupcounter.stepupcounter.ui.analytics.AnalyticsFragment"
+        android:name="com.jhiltunen.stepupcounter.ui.analytics.AnalyticsFragment"
         android:label="@string/title_analytics"
         tools:layout="@layout/fragment_analytics" />
 
     <fragment
         android:id="@+id/navigation_information"
-        android:name="com.stepupcounter.stepupcounter.ui.information.InformationFragment"
+        android:name="com.jhiltunen.stepupcounter.ui.information.InformationFragment"
         android:label="@string/title_information"
         tools:layout="@layout/fragment_information" />
 </navigation>

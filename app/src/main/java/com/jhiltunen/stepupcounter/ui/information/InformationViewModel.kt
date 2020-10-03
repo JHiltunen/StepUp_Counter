@@ -1,9 +1,9 @@
-package com.stepupcounter.stepupcounter.ui.information
+package com.jhiltunen.stepupcounter.ui.information
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.stepupcounter.stepupcounter.utils.Person
-import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
+import com.jhiltunen.stepupcounter.utils.Person
+import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 
 class InformationViewModel(application: Application) : AndroidViewModel(application) {
 

@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter
+package com.jhiltunen.stepupcounter
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -11,7 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.stepupcounter.stepupcounter.utils.Person
+import com.jhiltunen.stepupcounter.utils.Person
 
 class MainActivity : AppCompatActivity() {
 

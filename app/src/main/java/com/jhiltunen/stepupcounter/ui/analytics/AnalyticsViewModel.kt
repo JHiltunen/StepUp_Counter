@@ -1,10 +1,10 @@
-package com.stepupcounter.stepupcounter.ui.analytics
+package com.jhiltunen.stepupcounter.ui.analytics
 
 import android.app.Application
 import androidx.lifecycle.*
 import com.github.mikephil.charting.data.BarEntry
-import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
-import com.stepupcounter.stepupcounter.utils.Person
+import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
+import com.jhiltunen.stepupcounter.utils.Person
 import java.text.SimpleDateFormat
 
 class AnalyticsViewModel(application: Application) : AndroidViewModel(application) {

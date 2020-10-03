@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter
+package com.jhiltunen.stepupcounter
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

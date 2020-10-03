@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter.ui.home
+package com.jhiltunen.stepupcounter.ui.home
 
 import android.content.Context
 import android.hardware.Sensor
@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
-import com.stepupcounter.stepupcounter.R
+import com.jhiltunen.stepupcounter.R
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {

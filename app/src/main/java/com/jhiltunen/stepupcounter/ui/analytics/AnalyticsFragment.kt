@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter.ui.analytics
+package com.jhiltunen.stepupcounter.ui.analytics
 
 import android.os.Bundle
 import android.view.View
@@ -11,7 +11,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.stepupcounter.stepupcounter.R
+import com.jhiltunen.stepupcounter.R
 
 
 class AnalyticsFragment : Fragment(R.layout.fragment_analytics) {

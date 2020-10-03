@@ -1,12 +1,10 @@
-package com.stepupcounter.stepupcounter.ui.home
+package com.jhiltunen.stepupcounter.ui.home
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.stepupcounter.stepupcounter.utils.SharedPreferencesManager
-import com.stepupcounter.stepupcounter.utils.Person
+import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
+import com.jhiltunen.stepupcounter.utils.Person
 import org.joda.time.DateTime
 import org.joda.time.Days
 import java.text.SimpleDateFormat

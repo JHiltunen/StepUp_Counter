@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter
+package com.jhiltunen.stepupcounter
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.stepupcounter.stepupcounter.ui.information
+package com.jhiltunen.stepupcounter.ui.information
 
 import android.os.Bundle
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.stepupcounter.stepupcounter.R
+import com.jhiltunen.stepupcounter.R
 
 class InformationFragment : Fragment(R.layout.fragment_information) {
 
