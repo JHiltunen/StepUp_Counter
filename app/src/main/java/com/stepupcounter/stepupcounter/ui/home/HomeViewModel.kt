@@ -11,6 +11,7 @@ import org.joda.time.DateTime
 import org.joda.time.Days
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.pow
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -20,10 +21,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private var person : Person = Person()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
+    var bmi = 0.0
 
     var stepsCount = 0
 
@@ -31,6 +29,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         person = sharedPreferencesManager.loadData(getApplication())
         Log.d("stepscount","Askeleet tältä päivältä:" + person.getStepsFromSpecificDate(sdf.format(Date())))
         stepsCount = person.getStepsFromSpecificDate(sdf.format(Date())).toInt()
+    }
+
+    fun calculateBodyMassIndex() {
+        person = sharedPreferencesManager.loadData(getApplication())
+        bmi = person.getWeight() / (person.getHeight() / 100.0).pow(2)
+        println("BMI: " + bmi.toString())
     }
 
     private fun dateIsSameAsCurrentDate(lastDate : Date, currentDate : Date): Boolean {
