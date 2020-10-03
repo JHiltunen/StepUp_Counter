@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.icu.text.DecimalFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,6 +27,7 @@ class HomeFragment : Fragment(), SensorEventListener {
     private lateinit var homeViewModel: HomeViewModel
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
+    private lateinit var bmiValue : TextView
     private lateinit var circularProgressBar : CircularProgressBar
 
     // count number os steps as float value because progress bar animation needs float values
@@ -40,10 +42,6 @@ class HomeFragment : Fragment(), SensorEventListener {
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
-        })
 
         circularProgressBar = root.findViewById(R.id.progress_circular)
 
@@ -51,8 +49,8 @@ class HomeFragment : Fragment(), SensorEventListener {
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         // find the TextView element (that shows value of steps) from root
         tv_stepsCount = root.findViewById(R.id.tv_stepsTaken) as TextView
-
         tv_stepsCount.text = homeViewModel.stepsCount.toString()
+        bmiValue = root.findViewById(R.id.bmiValue)
 
         return root
     }
@@ -61,6 +59,9 @@ class HomeFragment : Fragment(), SensorEventListener {
         super.onResume()
         homeViewModel.updateStepsCount()
         tv_stepsCount.text = homeViewModel.stepsCount.toString()
+
+        homeViewModel.calculateBodyMassIndex()
+        bmiValue.text = DecimalFormat("##.##").format(homeViewModel.bmi)
 
         running = true
         // get the Step Counter sensor from sensormanager
