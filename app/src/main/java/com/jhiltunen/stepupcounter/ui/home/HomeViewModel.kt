@@ -3,15 +3,42 @@ package com.jhiltunen.stepupcounter.ui.home
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import com.jhiltunen.stepupcounter.data.database.HealthDatabase
+import com.jhiltunen.stepupcounter.data.models.Steps
+import com.jhiltunen.stepupcounter.logic.dao.HealthDao
+import com.jhiltunen.stepupcounter.logic.repository.HealthRepository
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import com.jhiltunen.stepupcounter.utils.Person
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.Days
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
 
+@InternalCoroutinesApi
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository: HealthRepository
+    val getAllSteps: LiveData<List<Steps>>
+
+    init {
+        val healthDao = HealthDatabase.getDatabase(application).healthDao()
+        repository = HealthRepository(healthDao)
+
+        getAllSteps = repository.getAllUsersSteps
+        println(getAllSteps.toString())
+    }
+
+    fun addSteps(steps: Steps) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addSteps(steps)
+        }
+    }
 
     private val TAG = "HomeViewModel"
     private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()

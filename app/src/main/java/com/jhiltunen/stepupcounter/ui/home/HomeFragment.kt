@@ -15,11 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.data.models.Steps
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
 
     private val TAG = "HomeFragment"
+    @InternalCoroutinesApi
     private lateinit var homeViewModel: HomeViewModel
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
@@ -30,6 +33,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     private var totalStepsSinceLastRebootOfDevice= 0f
     private var running = false
 
+    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         circularProgressBar = view.findViewById(R.id.progress_circular)
@@ -42,6 +46,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         bmiValue = view.findViewById(R.id.bmiValue)
     }
 
+    @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
         homeViewModel.updateStepsCount()
@@ -76,6 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
      * previousTotalSteps is retrieved from sharedPreferences when onCreateView function at the start is called.
      * Calls circular progressbar setProgressAnimation to visualize step count.
      */
+    @InternalCoroutinesApi
     override fun onSensorChanged(event: SensorEvent?) {
         if (running) {
             // event!! -> event not null
