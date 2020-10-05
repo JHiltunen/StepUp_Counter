@@ -42,6 +42,12 @@ class SharedPreferencesManager {
         return convertJsonToStepsObject(sharedPreferences.getString(PREFERENCE_KEY, ""))
     }
 
+    fun loadUserId(context: Context): Long {
+        val sharedPreferences = context.getSharedPreferences("USER", Context.MODE_PRIVATE)
+        Log.d(TAG, "loadUserId: ${sharedPreferences.getLong("userId", -1)}")
+        return sharedPreferences.getLong("userId", -1)
+    }
+
     private fun convertObjectToJson(person: Person): String {
         Log.d(TAG, "Converting Person object: ${person.toString()} to Json")
         return gson.toJson(person)

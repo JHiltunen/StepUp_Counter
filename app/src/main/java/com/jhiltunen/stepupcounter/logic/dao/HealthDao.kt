@@ -12,10 +12,13 @@ import com.jhiltunen.stepupcounter.data.models.User
 interface HealthDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addUser(user: User)
+    suspend fun addUser(user: User): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addSteps(steps: Steps)
+
+    @Query("SELECT * FROM users WHERE id = :id")
+    fun getUser(id: Long): LiveData<User>
 
     @Query ("SELECT * FROM steps")
     fun getAllUsersSteps(): LiveData<List<Steps>>

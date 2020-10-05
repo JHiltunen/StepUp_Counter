@@ -17,6 +17,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
 import com.jhiltunen.stepupcounter.data.models.Steps
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlin.math.pow
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
@@ -44,6 +45,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         tv_stepsCount = view.findViewById(R.id.tv_stepsTaken) as TextView
         tv_stepsCount.text = homeViewModel.stepsCount.toString()
         bmiValue = view.findViewById(R.id.bmiValue)
+
+        homeViewModel.getUser.observe(viewLifecycleOwner, {
+            var bmi = (it.weight / (it.height / 100.0).pow(2))
+            bmiValue.text = DecimalFormat("##.##").format(bmi)
+        })
     }
 
     @InternalCoroutinesApi
@@ -51,9 +57,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         super.onResume()
         homeViewModel.updateStepsCount()
         tv_stepsCount.text = homeViewModel.stepsCount.toString()
-
-        homeViewModel.calculateBodyMassIndex()
-        bmiValue.text = DecimalFormat("##.##").format(homeViewModel.bmi)
 
         running = true
         // get the Step Counter sensor from sensormanager

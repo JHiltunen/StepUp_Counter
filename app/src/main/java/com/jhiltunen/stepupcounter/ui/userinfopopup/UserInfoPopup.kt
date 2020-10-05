@@ -2,6 +2,7 @@ package com.jhiltunen.stepupcounter.ui.userinfopopup
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -48,7 +49,7 @@ class UserInfoPopup : AppCompatActivity() {
         if (!(username.isEmpty() || height == 0 || weight == 0 || gender.isEmpty())) {
             val user = User(0, username, height, weight, gender)
 
-            userInfoPopupViewModel.adduser(user)
+            Log.d("TAG", "addUserToDB: ${userInfoPopupViewModel.addUser(user)}")
 
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)

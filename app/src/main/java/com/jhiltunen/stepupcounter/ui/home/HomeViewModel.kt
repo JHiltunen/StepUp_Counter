@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.jhiltunen.stepupcounter.data.database.HealthDatabase
 import com.jhiltunen.stepupcounter.data.models.Steps
+import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.dao.HealthDao
 import com.jhiltunen.stepupcounter.logic.repository.HealthRepository
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
@@ -23,15 +24,14 @@ import kotlin.math.pow
 @InternalCoroutinesApi
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
+    private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
     private val repository: HealthRepository
-    val getAllSteps: LiveData<List<Steps>>
+    val getUser: LiveData<User>
 
     init {
         val healthDao = HealthDatabase.getDatabase(application).healthDao()
-        repository = HealthRepository(healthDao)
-
-        getAllSteps = repository.getAllUsersSteps
-        println(getAllSteps.toString())
+        repository = HealthRepository(healthDao, sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext))
+        getUser = repository.getUser
     }
 
     fun addSteps(steps: Steps) {
@@ -41,7 +41,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val TAG = "HomeViewModel"
-    private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
+
     private var sdf : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     private var person : Person = Person()
@@ -54,12 +54,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         person = sharedPreferencesManager.loadData(getApplication())
         Log.d("stepscount","Askeleet tältä päivältä:" + person.getStepsFromSpecificDate(sdf.format(Date())))
         stepsCount = person.getStepsFromSpecificDate(sdf.format(Date())).toInt()
-    }
-
-    fun calculateBodyMassIndex() {
-        person = sharedPreferencesManager.loadData(getApplication())
-        bmi = person.getWeight() / (person.getHeight() / 100.0).pow(2)
-        println("BMI: " + bmi.toString())
     }
 
     private fun dateIsSameAsCurrentDate(lastDate : Date, currentDate : Date): Boolean {
