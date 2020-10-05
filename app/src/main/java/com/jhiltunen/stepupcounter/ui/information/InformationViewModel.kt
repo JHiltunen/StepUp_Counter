@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 class InformationViewModel(application: Application) : AndroidViewModel(application) {
 
     private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
-    //private var person : Person = Person()
     val getUser: LiveData<User>
 
     private val repository: HealthRepository
@@ -29,5 +28,11 @@ class InformationViewModel(application: Application) : AndroidViewModel(applicat
         val healthDao = HealthDatabase.getDatabase(application).healthDao()
         repository = HealthRepository(healthDao, sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext))
         getUser = repository.getUser
+    }
+
+    fun updateUser(user: User) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateUser(user)
+        }
     }
 }

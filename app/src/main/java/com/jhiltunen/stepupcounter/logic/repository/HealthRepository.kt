@@ -15,6 +15,10 @@ class HealthRepository (private val healthDao: HealthDao, id : Long) {
         return healthDao.addUser(user)
     }
 
+    suspend fun updateUser(user: User) {
+        healthDao.updateUser(user)
+    }
+
     /*suspend fun getUser(userId: Long): LiveData<User> {
         return healthDao.getUser(userId)
     }*/
