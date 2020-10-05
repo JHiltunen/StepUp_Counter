@@ -14,10 +14,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jhiltunen.stepupcounter.ui.userinfopopup.UserInfoPopup
 import com.jhiltunen.stepupcounter.utils.Person
+import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.coroutines.InternalCoroutinesApi
 
 class MainActivity : AppCompatActivity() {
 
+    private var sharedPreferencesManager = SharedPreferencesManager()
     private var userFirstTime = true
 
     // request code for PHYSICAL_ACTIVITY
@@ -42,11 +44,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        loadData()
+        userFirstTime = sharedPreferencesManager.loadFirstTime(applicationContext)
 
         if (userFirstTime) {
             userFirstTime = false
-            saveData()
+            sharedPreferencesManager.saveFirstTime(applicationContext, userFirstTime)
 
             val i = Intent(this, UserInfoPopup::class.java)
             startActivity(i)
@@ -67,18 +69,5 @@ class MainActivity : AppCompatActivity() {
             // User has already given the permission
             Toast.makeText(this, "Permission is already provided", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun saveData() {
-        val sp = getSharedPreferences("FIRST_TIME", MODE_PRIVATE)
-        sp.edit().apply{
-            putBoolean("BOOLEAN_FIRST_TIME", userFirstTime)
-            apply()
-        }
-    }
-
-    private fun loadData() {
-        val sp = getSharedPreferences("FIRST_TIME", MODE_PRIVATE)
-        userFirstTime = sp.getBoolean("BOOLEAN_FIRST_TIME", true)
     }
 }

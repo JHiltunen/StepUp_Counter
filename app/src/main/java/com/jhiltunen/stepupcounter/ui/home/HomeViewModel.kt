@@ -50,12 +50,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     var stepsCount = 0
 
-    fun updateStepsCount() {
-        person = sharedPreferencesManager.loadData(getApplication())
-        Log.d("stepscount","Askeleet tältä päivältä:" + person.getStepsFromSpecificDate(sdf.format(Date())))
-        stepsCount = person.getStepsFromSpecificDate(sdf.format(Date())).toInt()
-    }
-
     private fun dateIsSameAsCurrentDate(lastDate : Date, currentDate : Date): Boolean {
         val currentDateTime = DateTime(currentDate)
         val lastDateTime = DateTime(lastDate)
