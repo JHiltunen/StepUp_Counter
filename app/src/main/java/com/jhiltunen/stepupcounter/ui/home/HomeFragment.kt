@@ -43,20 +43,26 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         // find the TextView element (that shows value of steps) from root
         tv_stepsCount = view.findViewById(R.id.tv_stepsTaken) as TextView
-        tv_stepsCount.text = homeViewModel.stepsCount.toString()
         bmiValue = view.findViewById(R.id.bmiValue)
 
         homeViewModel.getUser.observe(viewLifecycleOwner, {
-            var bmi = (it.weight / (it.height / 100.0).pow(2))
+            val bmi = (it.weight / (it.height / 100.0).pow(2))
             bmiValue.text = DecimalFormat("##.##").format(bmi)
+        })
+
+        homeViewModel.getUsersStepsCountFromSpecificDate.observe(viewLifecycleOwner, {
+            tv_stepsCount.text = it.toString()
+            circularProgressBar.progressMax = 16500f
+            // update progressbar animation
+            circularProgressBar.apply {
+                setProgressWithAnimation(it.toFloat())
+            }
         })
     }
 
     @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
-        homeViewModel.updateStepsCount()
-        tv_stepsCount.text = homeViewModel.stepsCount.toString()
 
         running = true
         // get the Step Counter sensor from sensormanager
@@ -92,15 +98,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
-
-            homeViewModel.calculateSteps(totalStepsSinceLastRebootOfDevice)
-            tv_stepsCount.text = homeViewModel.stepsCount.toString()
-
-            circularProgressBar.progressMax = 16500f
-            // update progressbar animation
-            circularProgressBar.apply {
-                setProgressWithAnimation(tv_stepsCount.text.toString().toFloat())
-            }
+            homeViewModel.calculateStepsDatabase(totalStepsSinceLastRebootOfDevice)
 
         } else {
             Log.d(TAG, "Event null")

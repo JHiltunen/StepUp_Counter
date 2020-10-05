@@ -14,12 +14,21 @@ interface HealthDao {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateUser(user: User)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addSteps(steps: Steps)
+
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun updateSteps(steps: Steps)
 
     @Query("SELECT * FROM users WHERE id = :id")
     fun getUser(id: Long): LiveData<User>
 
-    @Query ("SELECT * FROM steps")
-    fun getAllUsersSteps(): LiveData<List<Steps>>
+    @Query("SELECT value FROM steps WHERE userId = :userId AND date = :date")
+    fun getUsersStepsCountFromSpecificDate(userId: Long, date: String): LiveData<Int>
+
+    @Query("SELECT * FROM steps WHERE userId = :userId AND date = :date")
+    fun getUsersStepsFromSpecificDate(userId: Long, date: String): Steps
+
+    @Query ("SELECT * FROM steps WHERE userId = :userId")
+    fun getAllUsersSteps(userId: Long): LiveData<List<Steps>>
 }
