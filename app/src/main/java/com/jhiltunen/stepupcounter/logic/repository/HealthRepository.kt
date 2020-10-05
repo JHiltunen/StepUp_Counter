@@ -26,6 +26,10 @@ class HealthRepository (private val healthDao: HealthDao, var id: Long) {
         return healthDao.getUsersStepsFromSpecificDate(id, date)
     }
 
+    fun getAllUsersSteps():LiveData<List<Steps>> {
+        return healthDao.getAllUsersSteps(id)
+    }
+
     suspend fun addSteps(steps: Steps) {
         healthDao.addSteps(steps)
     }
