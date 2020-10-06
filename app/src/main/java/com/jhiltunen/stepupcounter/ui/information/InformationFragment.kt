@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jhiltunen.stepupcounter.R
