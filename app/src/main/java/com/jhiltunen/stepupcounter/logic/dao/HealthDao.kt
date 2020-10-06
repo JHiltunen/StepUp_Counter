@@ -58,6 +58,15 @@ interface HealthDao {
     fun getUsersStepsCountFromSpecificDate(userId: Long, date: String): LiveData<Int>
 
     /**
+     * Query to get previousSteps from specific date where userId is given.
+     * @param userId Users id as Long.
+     * @param date Tells which date previousSteps will be returned.
+     * @return Int
+     */
+    @Query("SELECT previousSteps FROM steps WHERE userId = :userId AND date = :date")
+    fun getUsersPreviousStepsFromSpecificDate(userId: Long, date: String): Int
+
+    /**
      * Query to return entire row from steps table from specific date and with specific user id.
      * @param userId Users id as Long.
      * @param date Tells which date steps count will be returned.

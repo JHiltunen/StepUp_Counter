@@ -27,6 +27,10 @@ class HealthRepository(private val healthDao: HealthDao, var id: Long) {
         return healthDao.getUsersStepsFromSpecificDate(id, date)
     }
 
+    fun getUsersPreviousStepsFromSpecificDate(date: String): Int {
+        return healthDao.getUsersPreviousStepsFromSpecificDate(id, date)
+    }
+
     fun getUsersLastSavedDate(): Date {
         var datesAsStringList = healthDao.getAllUsersDates(id)
 

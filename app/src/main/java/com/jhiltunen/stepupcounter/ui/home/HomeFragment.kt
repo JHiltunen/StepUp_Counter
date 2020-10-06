@@ -16,6 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable.isActive
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlin.math.pow
 
 
@@ -100,6 +104,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             // get sensor value from event
             // "!!" makes sure that sensor value is not retrieved from null event
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
+
+            //homeViewModel.repeatFun(totalStepsSinceLastRebootOfDevice)
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
             // call method to calculate steps value

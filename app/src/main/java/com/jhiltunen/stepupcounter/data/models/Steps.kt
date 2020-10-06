@@ -19,7 +19,7 @@ data class Steps (
     val id: Int,
     val date: String,
     val value: Int,
-    val previousSteps: Int,
+    var previousSteps: Int,
     val userId: Long
 
 )
