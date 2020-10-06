@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
-import com.jhiltunen.stepupcounter.data.models.Steps
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.math.pow
 
@@ -26,7 +25,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     @InternalCoroutinesApi
     private lateinit var homeViewModel: HomeViewModel
     private var sensorManager: SensorManager? = null
-    private lateinit var tv_stepsCount : TextView
+    private lateinit var tvStepsCount : TextView
     private lateinit var bmiValue : TextView
     private lateinit var circularProgressBar : CircularProgressBar
 
@@ -36,22 +35,31 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
 
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // get viewModel
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        // get circular progress bar UI element
         circularProgressBar = view.findViewById(R.id.progress_circular)
 
         // get the SensorManager when creating the view
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        // find the TextView element (that shows value of steps) from root
-        tv_stepsCount = view.findViewById(R.id.tv_stepsTaken) as TextView
+        // find the TextView element that shows value of users current steps
+        tvStepsCount = view.findViewById(R.id.tv_stepsTaken) as TextView
+        // find the TextView element that shows value of users bmi
         bmiValue = view.findViewById(R.id.bmiValue)
 
+        // observe users table on database for changes
+        // if data on users table changes -> bmi is calculated and updated to UI
         homeViewModel.getUser.observe(viewLifecycleOwner, {
             val bmi = (it.weight / (it.height / 100.0).pow(2))
+            // use DecimalFormat to get number with two significant digits
             bmiValue.text = DecimalFormat("##.##").format(bmi)
         })
 
+        // observe users current steps (from database)
+        // if value changes -> update new value to UI
         homeViewModel.getUsersStepsCountFromSpecificDate.observe(viewLifecycleOwner, {
-            tv_stepsCount.text = it.toString()
+            tvStepsCount.text = it.toString()
+            // set max value for progressbar
             circularProgressBar.progressMax = 16500f
             // update progressbar animation
             circularProgressBar.apply {
@@ -85,19 +93,17 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
 
     /**
      * This function is called when sensor value changes/sensor detects movement.
-     * Calculating currentSteps by taking totalStepsSinceLastRebootOfDevice and subtracting previousTotalSteps from it.
-     * previousTotalSteps is retrieved from sharedPreferences when onCreateView function at the start is called.
-     * Calls circular progressbar setProgressAnimation to visualize step count.
      */
     @InternalCoroutinesApi
     override fun onSensorChanged(event: SensorEvent?) {
         if (running) {
-            // event!! -> event not null
-            // value of sensor is at index 0
+            // get sensor value from event
+            // "!!" makes sure that sensor value is not retrieved from null event
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
-            homeViewModel.calculateStepsDatabase(totalStepsSinceLastRebootOfDevice)
+            // call method to calculate steps value
+            homeViewModel.calculateSteps(totalStepsSinceLastRebootOfDevice)
 
         } else {
             Log.d(TAG, "Event null")

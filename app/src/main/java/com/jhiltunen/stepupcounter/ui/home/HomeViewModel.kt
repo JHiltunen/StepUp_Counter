@@ -18,6 +18,10 @@ import org.joda.time.Days
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Represents view model for HomeFragment.
+ * Contains HomeFragment calculation logic.
+ */
 @InternalCoroutinesApi
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -26,21 +30,34 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private var sharedPreferencesManager : SharedPreferencesManager = SharedPreferencesManager()
     private val repository: HealthRepository
+    // LiveData is used to observe changes to user information and users steps count
     val getUser: LiveData<User>
     val getUsersStepsCountFromSpecificDate: LiveData<Int>
 
+    /**
+     * Initialize view model and required variables
+     */
     init {
+        // create new Health Data Access Object
         val healthDao = HealthDatabase.getDatabase(application).healthDao()
+        // initialize new repository and load userId from shared preferences
         repository = HealthRepository(healthDao, sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext))
+        // get users information as LiveData (can be observed) from database
         getUser = repository.getUser
+        // get users steps count as LiveData (can be observed) from specific date
         getUsersStepsCountFromSpecificDate = repository.getUsersStepsCountFromSpecificDate(sdf.format(Date()))
     }
 
-    private fun dateIsSameAsCurrentDate(lastDate : Date, currentDate : Date): Boolean {
+    /**
+     * Function to check if two last saved Date and current date is same day.
+     * @param lastDate Date object that's last saved to database
+     * @param currentDate Date object with value of current date.
+     * @return Boolean This returns true if there's 0 days between the lastDate and currentDate objects. Else return false
+     */
+    private fun lastDateIsSameAsCurrentDate(lastDate : Date, currentDate : Date): Boolean {
+        // convert java Date to Joda DateTime
         val currentDateTime = DateTime(currentDate)
         val lastDateTime = DateTime(lastDate)
-
-        // Joda
         Log.d(
             TAG,
             "currentDate: " + currentDate + "; lastSavedDate: " + lastDate + " date.before(currentdate): " + lastDate.before(
@@ -50,46 +67,59 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         return Days.daysBetween(lastDateTime, currentDateTime).days == 0
     }
 
-    fun calculateStepsDatabase(totalStepsSinceLastRebootOfDevice: Float) {
+    /**
+     * Function to calculate users current steps.
+     * @param totalStepsSinceLastRebootOfDevice Float value from device step sensor
+     */
+    fun calculateSteps(totalStepsSinceLastRebootOfDevice: Float) {
+        // use Coroutines viewModelScope.launch(Dispatchers.IO)
+        // to prevent running database queries on Main Thread
         viewModelScope.launch(Dispatchers.IO) {
+            // get current date
             val currentDate = Date()
+            // get last Date that's inserted to database
             val lastDate : Date = repository.getUsersLastSavedDate()
 
+            // get users steps value for current date
             var steps : Steps = repository.getUsersStepsFromSpecificDate(sdf.format(currentDate))
 
-            if (steps == null || !dateIsSameAsCurrentDate(lastDate, currentDate)) {
+            // if steps == null or lastDate isn't same date as current
+            if (steps == null || !lastDateIsSameAsCurrentDate(lastDate, currentDate)) {
+                // add new steps row to database with steps.value = 0 and
+                // totalStepsSinceLastRebootOfDevice is value from function parameter totalStepsSinceLastRebootOfDevice
                 repository.addSteps(Steps(0, sdf.format(currentDate), 0, totalStepsSinceLastRebootOfDevice.toInt(), sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext)))
             } else {
+                // get current date steps value from database
                 steps = repository.getUsersStepsFromSpecificDate(sdf.format(currentDate))
 
+                // Steps value from database. Tells how many steps user has already taken today
                 val usersStepsFromToday = steps.value
 
+                // variable to count current steps user has taken
                 var currentSteps: Int
 
                 if (totalStepsSinceLastRebootOfDevice == 0f) {
-                    Log.d(TAG, "Sensorin arvo on nolla")
                     // in case where sensor value is zero
+                    Log.d(TAG, "Sensorin arvo on nolla")
+                    // currentSteps = 0
                     currentSteps = usersStepsFromToday
-                    repository.updateSteps(Steps(
-                        id = steps.id,
-                        date = steps.date,
-                        value = steps.value,
-                        previousSteps = currentSteps,
-                        userId = steps.userId
-                    ))
                 } else {
                     if (totalStepsSinceLastRebootOfDevice > usersStepsFromToday) {
                         currentSteps = totalStepsSinceLastRebootOfDevice.toInt() - steps.previousSteps
-
                     } else {
-                        Log.d(TAG, "ELSE")
-                        Log.d(TAG, "ELSE haara")
                         currentSteps = steps.previousSteps + totalStepsSinceLastRebootOfDevice.toInt()
                     }
                 }
 
+                // update current date steps value to database
                 Log.d(TAG, "Sama päivä")
-                repository.updateSteps(Steps(steps.id, steps.date, currentSteps, steps.previousSteps, steps.userId))
+                repository.updateSteps(Steps(
+                    id = steps.id,
+                    date = steps.date,
+                    value = currentSteps,
+                    previousSteps = steps.previousSteps,
+                    userId = steps.userId
+                ))
             }
         }
     }
