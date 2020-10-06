@@ -13,9 +13,9 @@ class SharedPreferencesManager {
     private val TAG = "SharedPreferencesManager"
     // set variables for preference names
     private val userPreference = "user"
-    private val userPrefrenceKey = "userId"
+    private val userPreferencesKey = "userId"
     private val firstLaunchPreference = "firstLaunch"
-    private val firstLaunchPrefrencesKey = "isFirstLaunch"
+    private val firstLaunchPreferencesKey = "isFirstLaunch"
 
     /**
      * Function to load saved userId from shared preference.
@@ -25,9 +25,9 @@ class SharedPreferencesManager {
     fun loadUserId(context: Context): Long {
         // get SharedPreferences
         val sharedPreferences = context.getSharedPreferences(userPreference, Context.MODE_PRIVATE)
-        Log.d(TAG, "loadUserId: ${sharedPreferences.getLong(userPrefrenceKey, -1)}")
+        Log.d(TAG, "loadUserId: ${sharedPreferences.getLong(userPreferencesKey, -1)}")
         // return saved userId -> if not found, then return -1
-        return sharedPreferences.getLong(userPrefrenceKey, -1)
+        return sharedPreferences.getLong(userPreferencesKey, -1)
     }
 
     /**
@@ -41,7 +41,7 @@ class SharedPreferencesManager {
         // edit
         sp.edit().apply{
             // put boolean value
-            putBoolean(firstLaunchPrefrencesKey, userFirstTime)
+            putBoolean(firstLaunchPreferencesKey, userFirstTime)
             // apply and save data
             apply()
         }
@@ -56,6 +56,6 @@ class SharedPreferencesManager {
         // get SharedPreferences
         val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
         // return boolean value
-        return sp.getBoolean(firstLaunchPrefrencesKey, true)
+        return sp.getBoolean(firstLaunchPreferencesKey, true)
     }
 }
