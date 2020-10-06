@@ -30,23 +30,29 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
 
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // get viewModel
         informationViewModel = ViewModelProvider(this).get(InformationViewModel::class.java)
 
+        // get UI elements
         username = view.findViewById(R.id.et_username)
         height = view.findViewById(R.id.heightan)
         weight = view.findViewById(R.id.weightan)
         genderRadioGroup = view.findViewById(R.id.gender)
         saveBtn = view.findViewById(R.id.save)
 
-        //informationViewModel.loadUserInformation()
-
+        // observe users table on database for changes
+        // if data on users table changes -> InformationFragment UI is updated
         informationViewModel.getUser.observe(viewLifecycleOwner, {
             Log.d("TAG", "onViewCreated: $it")
             Log.d("TAG", "onViewCreated gender: ${it.gender}")
 
+            // changed data retrieved from database
+            // set text for the UI elements
             username.setText(it.username)
             height.setText(it.height.toString())
             weight.setText(it.weight.toString())
+            // gender is saved as String to database
+            // so we can't (because we don't have id of radioButton) directly check correct radioButton
             if (it.gender == "Male") {
                 genderRadioGroup.check(R.id.male)
             } else {
@@ -54,6 +60,7 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
             }
         })
 
+        // when user clicks save button
         saveBtn.setOnClickListener {
             var gender : String
             if (genderRadioGroup.checkedRadioButtonId == male.id) {
@@ -61,6 +68,7 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
             } else {
                 gender = "Female"
             }
+            // update users data
             informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()), username.text.toString(), Integer.valueOf(height.text.toString()), Integer.valueOf(weight.text.toString()), gender))
         }
     }
