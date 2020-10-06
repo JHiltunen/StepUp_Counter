@@ -13,19 +13,19 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jhiltunen.stepupcounter.ui.userinfopopup.UserInfoPopup
-import com.jhiltunen.stepupcounter.utils.Person
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.coroutines.InternalCoroutinesApi
 
 class MainActivity : AppCompatActivity() {
 
+    // SharedPreferencesManager to access appFirstLaunch boolean value
     private var sharedPreferencesManager = SharedPreferencesManager()
-    private var userFirstTime = true
+    // boolean to tell if this is first launch of the app
+    private var appFirstLaunch = true
 
     // request code for PHYSICAL_ACTIVITY
     // the code can be any number
     private val PHYSICAL_ACTIVITY = 100
-    private val steps = Person()
 
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,21 +44,28 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        userFirstTime = sharedPreferencesManager.loadFirstTime(applicationContext)
+        // load appFirstLaunch from SharedPreferences
+        appFirstLaunch = sharedPreferencesManager.loadIsFirstLaunch(applicationContext)
 
-        if (userFirstTime) {
-            userFirstTime = false
-            sharedPreferencesManager.saveFirstTime(applicationContext, userFirstTime)
+        // if it is users first launch of app
+        // then create new intent and ask basic user information
+        if (appFirstLaunch) {
+            // update appFirstLaunch to false
+            appFirstLaunch = false
+            // save appFirstLaunch boolean to SharedPreferences
+            sharedPreferencesManager.saveIsFirstLaunch(applicationContext, appFirstLaunch)
 
+            // create new intent to ask user basic info (username, height, weight, gender)
             val i = Intent(this, UserInfoPopup::class.java)
             startActivity(i)
+            // call finnish function to prevent navigating back to same view
             finish()
         }
 
         // Since API level 29 we are required to ask the user for ACTIVITY_RECOGNITION at runtime.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)!= PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
-            //ask for permission to use sensor if API level >= 29
+            //ask for permission to use sensor if SDK API level >= 29
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 requestPermissions(
                     arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),

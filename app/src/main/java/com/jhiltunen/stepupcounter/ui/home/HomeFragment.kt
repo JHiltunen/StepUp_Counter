@@ -63,7 +63,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
-
         running = true
         // get the Step Counter sensor from sensormanager
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)

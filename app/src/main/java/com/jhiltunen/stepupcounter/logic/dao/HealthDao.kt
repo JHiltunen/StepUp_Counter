@@ -29,6 +29,9 @@ interface HealthDao {
     @Query("SELECT * FROM steps WHERE userId = :userId AND date = :date")
     fun getUsersStepsFromSpecificDate(userId: Long, date: String): Steps
 
+    @Query("SELECT date FROM steps WHERE userId = :userId")
+    fun getAllUsersDates(userId: Long): List<String>
+
     @Query ("SELECT * FROM steps WHERE userId = :userId")
     fun getAllUsersSteps(userId: Long): LiveData<List<Steps>>
 }

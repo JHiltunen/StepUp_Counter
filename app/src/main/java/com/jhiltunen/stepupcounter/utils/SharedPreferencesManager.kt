@@ -18,7 +18,7 @@ class SharedPreferencesManager {
         return sharedPreferences.getLong("userId", -1)
     }
 
-    fun saveFirstTime(context: Context, userFirstTime: Boolean) {
+    fun saveIsFirstLaunch(context: Context, userFirstTime: Boolean) {
         val sp = context.getSharedPreferences("FIRST_TIME", AppCompatActivity.MODE_PRIVATE)
         sp.edit().apply{
             putBoolean("BOOLEAN_FIRST_TIME", userFirstTime)
@@ -26,7 +26,7 @@ class SharedPreferencesManager {
         }
     }
 
-    fun loadFirstTime(context: Context): Boolean {
+    fun loadIsFirstLaunch(context: Context): Boolean {
         val sp = context.getSharedPreferences("FIRST_TIME", AppCompatActivity.MODE_PRIVATE)
         return sp.getBoolean("BOOLEAN_FIRST_TIME", true)
     }

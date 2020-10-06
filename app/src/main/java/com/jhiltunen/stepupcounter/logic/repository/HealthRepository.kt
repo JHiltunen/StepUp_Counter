@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.dao.HealthDao
+import java.text.SimpleDateFormat
+import java.util.Date
 
-class HealthRepository (private val healthDao: HealthDao, var id: Long) {
+class HealthRepository(private val healthDao: HealthDao, var id: Long) {
 
     val getUser: LiveData<User> = healthDao.getUser(id)
-    val getUsersSteps: LiveData<List<Steps>> = healthDao.getAllUsersSteps(id)
 
     suspend fun addUser(user: User): Long {
         return healthDao.addUser(user)
@@ -24,6 +25,12 @@ class HealthRepository (private val healthDao: HealthDao, var id: Long) {
 
     fun getUsersStepsFromSpecificDate(date: String): Steps {
         return healthDao.getUsersStepsFromSpecificDate(id, date)
+    }
+
+    fun getUsersLastSavedDate(): Date {
+        var datesAsStringList = healthDao.getAllUsersDates(id)
+
+        return datesAsStringList.stream().map { date -> SimpleDateFormat("yyyy-MM-dd").parse(date) }.max(Date::compareTo).get()
     }
 
     fun getAllUsersSteps():LiveData<List<Steps>> {
