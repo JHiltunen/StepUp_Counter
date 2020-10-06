@@ -1,33 +1,61 @@
 package com.jhiltunen.stepupcounter.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 
+/**
+ * Saves data to SharedPreferences.
+ * Loads data from SharedPreferences.
+ */
 class SharedPreferencesManager {
 
-    private val PREFERENECE_NAME = "USER"
-    private val PREFERENCE_KEY = "steps"
     private val TAG = "SharedPreferencesManager"
+    // set variables for preference names
+    private val userPreference = "user"
+    private val userPrefrenceKey = "userId"
+    private val firstLaunchPreference = "firstLaunch"
+    private val firstLaunchPrefrencesKey = "isFirstLaunch"
 
+    /**
+     * Function to load saved userId from shared preference.
+     * @param context Application context.
+     * @return Returns the userId that's saved to shared preference or -1 if there wasn't saved userId'
+     */
     fun loadUserId(context: Context): Long {
-        val sharedPreferences = context.getSharedPreferences("USER", Context.MODE_PRIVATE)
-        Log.d(TAG, "loadUserId: ${sharedPreferences.getLong("userId", -1)}")
-        return sharedPreferences.getLong("userId", -1)
+        // get SharedPreferences
+        val sharedPreferences = context.getSharedPreferences(userPreference, Context.MODE_PRIVATE)
+        Log.d(TAG, "loadUserId: ${sharedPreferences.getLong(userPrefrenceKey, -1)}")
+        // return saved userId -> if not found, then return -1
+        return sharedPreferences.getLong(userPrefrenceKey, -1)
     }
 
+    /**
+     * Saves the parameter boolean value to shared preferences.
+     * @param context Application context.
+     * @param userFirstTime Boolean value that tells if user launches app for the first time
+     */
     fun saveIsFirstLaunch(context: Context, userFirstTime: Boolean) {
-        val sp = context.getSharedPreferences("FIRST_TIME", AppCompatActivity.MODE_PRIVATE)
+        // get SharedPreferences
+        val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
+        // edit
         sp.edit().apply{
-            putBoolean("BOOLEAN_FIRST_TIME", userFirstTime)
+            // put boolean value
+            putBoolean(firstLaunchPrefrencesKey, userFirstTime)
+            // apply and save data
             apply()
         }
     }
 
+    /**
+     * Loads the isFirstLaunch boolean value from sharedPreferences.
+     * @param context ApplicationContext.
+     * @return Boolean that tells if it's app first launch.
+     */
     fun loadIsFirstLaunch(context: Context): Boolean {
-        val sp = context.getSharedPreferences("FIRST_TIME", AppCompatActivity.MODE_PRIVATE)
-        return sp.getBoolean("BOOLEAN_FIRST_TIME", true)
+        // get SharedPreferences
+        val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
+        // return boolean value
+        return sp.getBoolean(firstLaunchPrefrencesKey, true)
     }
 }
