@@ -29,7 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     private lateinit var bmiValue : TextView
     private lateinit var circularProgressBar : CircularProgressBar
 
-    // count number os steps as float value because progress bar animation needs float values
+    // count number of steps as float value because progress bar animation needs float values
     private var totalStepsSinceLastRebootOfDevice= 0f
     private var running = false
 
