@@ -20,6 +20,22 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:gravity="center|center_horizontal|center_vertical"
+                android:text="@string/username_text"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/et_username"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:autofillHints="@string/username_text"
+                android:hint="@string/username_text"
+                android:inputType="textPersonName"/>
+
+            <TextView
                 android:id="@+id/height"
                 android:layout_width="wrap_content"
                 android:layout_height="56dp"

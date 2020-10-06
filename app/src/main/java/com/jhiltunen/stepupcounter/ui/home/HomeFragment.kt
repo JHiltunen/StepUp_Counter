@@ -15,11 +15,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.data.models.Steps
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlin.math.pow
 
 
 class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
 
     private val TAG = "HomeFragment"
+    @InternalCoroutinesApi
     private lateinit var homeViewModel: HomeViewModel
     private var sensorManager: SensorManager? = null
     private lateinit var tv_stepsCount : TextView
@@ -30,6 +34,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     private var totalStepsSinceLastRebootOfDevice= 0f
     private var running = false
 
+    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         circularProgressBar = view.findViewById(R.id.progress_circular)
@@ -38,18 +43,26 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         sensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         // find the TextView element (that shows value of steps) from root
         tv_stepsCount = view.findViewById(R.id.tv_stepsTaken) as TextView
-        tv_stepsCount.text = homeViewModel.stepsCount.toString()
         bmiValue = view.findViewById(R.id.bmiValue)
+
+        homeViewModel.getUser.observe(viewLifecycleOwner, {
+            val bmi = (it.weight / (it.height / 100.0).pow(2))
+            bmiValue.text = DecimalFormat("##.##").format(bmi)
+        })
+
+        homeViewModel.getUsersStepsCountFromSpecificDate.observe(viewLifecycleOwner, {
+            tv_stepsCount.text = it.toString()
+            circularProgressBar.progressMax = 16500f
+            // update progressbar animation
+            circularProgressBar.apply {
+                setProgressWithAnimation(it.toFloat())
+            }
+        })
     }
 
+    @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
-        homeViewModel.updateStepsCount()
-        tv_stepsCount.text = homeViewModel.stepsCount.toString()
-
-        homeViewModel.calculateBodyMassIndex()
-        bmiValue.text = DecimalFormat("##.##").format(homeViewModel.bmi)
-
         running = true
         // get the Step Counter sensor from sensormanager
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
@@ -76,6 +89,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
      * previousTotalSteps is retrieved from sharedPreferences when onCreateView function at the start is called.
      * Calls circular progressbar setProgressAnimation to visualize step count.
      */
+    @InternalCoroutinesApi
     override fun onSensorChanged(event: SensorEvent?) {
         if (running) {
             // event!! -> event not null
@@ -83,15 +97,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")
-
-            homeViewModel.calculateSteps(totalStepsSinceLastRebootOfDevice)
-            tv_stepsCount.text = homeViewModel.stepsCount.toString()
-
-            circularProgressBar.progressMax = 16500f
-            // update progressbar animation
-            circularProgressBar.apply {
-                setProgressWithAnimation(tv_stepsCount.text.toString().toFloat())
-            }
+            homeViewModel.calculateStepsDatabase(totalStepsSinceLastRebootOfDevice)
 
         } else {
             Log.d(TAG, "Event null")
