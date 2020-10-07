@@ -131,6 +131,6 @@ interface HealthDao {
      * @param userId Users id.
      * @return List<String>
      */
-    @Query ("SELECT * FROM steps WHERE userId = :userId")
+    @Query ("SELECT * FROM steps WHERE userId = :userId ORDER BY date ASC")
     fun getAllUsersSteps(userId: Long): LiveData<List<Steps>>
 }
