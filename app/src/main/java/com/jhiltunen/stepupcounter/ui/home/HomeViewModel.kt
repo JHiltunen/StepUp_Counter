@@ -127,7 +127,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun repeatFun(): Job {
+    /**
+     * Function that checks every minute if date has changed.
+     * If date has changed then add new steps to database
+     */
+    fun checkIfDateHasChanged(): Job {
+        // prevent running database queries on Main Thread
         return viewModelScope.launch(Dispatchers.IO) {
             while(NonCancellable.isActive) {
                 val lastDate : Date = repository.getUsersLastSavedDate()

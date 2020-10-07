@@ -17,10 +17,6 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.NonCancellable.isActive
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlin.math.pow
 
 
@@ -72,7 +68,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
                 setProgressWithAnimation(it.toFloat())
             }
         })
-        homeViewModel.repeatFun()
+        homeViewModel.checkIfDateHasChanged()
     }
 
     @InternalCoroutinesApi
@@ -106,7 +102,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
             Log.d(TAG, "Added listener")
         }
-        homeViewModel.repeatFun()
+        homeViewModel.checkIfDateHasChanged()
     }
 
     /**

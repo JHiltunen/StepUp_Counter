@@ -60,6 +60,11 @@ class SharedPreferencesManager {
         return sp.getBoolean(firstLaunchPreferencesKey, true)
     }
 
+    /**
+     * Saves given value to shared preferences.
+     * @param context Application context.
+     * @param totalStepsSinceLastRebootOfDevice Number of steps since last reboot of device.
+     */
     fun saveSensorValueToSharedPreferences(context: Context, totalStepsSinceLastRebootOfDevice: Float) {
         // get SharedPreferences
         val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
@@ -72,6 +77,11 @@ class SharedPreferencesManager {
         }
     }
 
+    /**
+     * Loads totalStepsSinceLastRebootOfDevice from shared preferences.
+     * @param context Application context.
+     * @return totalStepsSinceLastRebootOfDevice Number of steps since last reboot of device.
+     */
     fun loadTotalStepsSinceLastRebootOfDevice(context: Context): Float {
         // get SharedPreferences
         val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
