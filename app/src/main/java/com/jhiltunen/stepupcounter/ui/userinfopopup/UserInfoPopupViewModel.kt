@@ -47,6 +47,7 @@ class UserInfoPopupViewModel (application: Application) : AndroidViewModel(appli
             // addUser function returns id that's given to new user
             // new users id is saved to sharedPreferences by calling saveUserId
             sharedPreferencesManager.saveUserId(getApplication<Application>().applicationContext, repository.insertIntoUsersAndInitializeSteps(user, SimpleDateFormat("yyyy-MM-dd").format(Date())))
+
             repository.addBodyMassIndexToDate(BodyMassIndex(0, SimpleDateFormat("yyyy-MM-dd").format(Date()), (user.weight.toFloat() / (user.height.toFloat() / 100.0).pow(2)), sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext)))
         }
     }
