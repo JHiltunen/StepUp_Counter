@@ -62,13 +62,17 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         homeViewModel.getUsersStepsCountFromSpecificDate.observe(viewLifecycleOwner, {
             tvStepsCount.text = it.toString()
             // set max value for progressbar
-            circularProgressBar.progressMax = 10000f
+            circularProgressBar.progressMax = 16500f
             // update progressbar animation
             circularProgressBar.apply {
                 setProgressWithAnimation(it.toFloat())
             }
         })
-        homeViewModel.checkIfDateHasChanged()
+
+
+        if (!sharedPreferencesManager.loadIsFirstLaunch(requireContext().applicationContext)) {
+            homeViewModel.checkIfDateHasChanged()
+        }
     }
 
     @InternalCoroutinesApi
@@ -102,7 +106,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
             Log.d(TAG, "Added listener")
         }
-        homeViewModel.checkIfDateHasChanged()
+
+        if (!sharedPreferencesManager.loadIsFirstLaunch(requireContext().applicationContext)) {
+            homeViewModel.checkIfDateHasChanged()
+        }
     }
 
     /**

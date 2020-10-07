@@ -1,5 +1,6 @@
 package com.jhiltunen.stepupcounter.utils
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,24 @@ class SharedPreferencesManager {
         Log.d(TAG, "loadUserId: ${sharedPreferences.getLong(userPreferencesKey, -1)}")
         // return saved userId -> if not found, then return -1
         return sharedPreferences.getLong(userPreferencesKey, -1)
+    }
+
+    /**
+     * Saves userId given in parameters to sharedPreferences.
+     * @param context Application context
+     * @param userId That's going to be saved to sharedPreferences.
+     */
+    fun saveUserId(context: Context, userId: Long) {
+        Log.d("TAG", "saveId: $userId")
+        // get shared preference
+        val sp = context.getSharedPreferences(userPreference, AppCompatActivity.MODE_PRIVATE)
+        // edit shared preferences
+        sp.edit().apply{
+            // put userId as long
+            putLong(userPreferencesKey, userId)
+            apply()
+            // apply changes and save
+        }
     }
 
     /**

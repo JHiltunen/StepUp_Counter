@@ -6,12 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.jhiltunen.stepupcounter.data.database.HealthDatabase
+import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.repository.HealthRepository
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Represents view model for UserInfoPopup.
@@ -41,24 +44,7 @@ class UserInfoPopupViewModel (application: Application) : AndroidViewModel(appli
         viewModelScope.launch(Dispatchers.IO) {
             // addUser function returns id that's given to new user
             // new users id is saved to sharedPreferences by calling saveUserId
-            saveUserId(repository.addUser(user))
-        }
-    }
-
-    /**
-     * Saves userId given in parameters to sharedPreferences.
-     * @param userId That's going to be saved to sharedPreferences.
-     */
-    private fun saveUserId(userId: Long) {
-        Log.d("TAG", "saveId: $userId")
-        // get shared preference
-        val sp = getApplication<Application>().getSharedPreferences("USER", AppCompatActivity.MODE_PRIVATE)
-        // edit shared preferences
-        sp.edit().apply{
-            // put userId as long
-            putLong("userId", userId)
-            apply()
-            // apply changes and save
+            sharedPreferencesManager.saveUserId(getApplication<Application>().applicationContext, repository.insertIntoUsersAndInitializeSteps(user, SimpleDateFormat("yyyy-MM-dd").format(Date())))
         }
     }
 }

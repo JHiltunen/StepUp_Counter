@@ -11,6 +11,14 @@ import com.jhiltunen.stepupcounter.data.models.User
 @Dao
 interface HealthDao {
 
+    @Transaction
+    suspend fun insertIntoUsersAndInitializeSteps(user: User, date: String): Long {
+        var id = addUser(user)
+        addSteps(Steps(0, date, 0, -1, id))
+
+        return id
+    }
+
     /**
      * Adds new User to database.
      * @param user User object.

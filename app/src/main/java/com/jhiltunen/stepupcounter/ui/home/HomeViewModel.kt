@@ -43,7 +43,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         // get users information as LiveData (can be observed) from database
         getUser = repository.getUser
         // get users steps count as LiveData (can be observed) from specific date
-        getUsersStepsCountFromSpecificDate = repository.getUsersStepsCountFromSpecificDate(sdf.format(Date()))
+        Log.d(TAG, ": ${repository.getUsersStepsCountFromSpecificDate("2020-10-07")}")
+        getUsersStepsCountFromSpecificDate = repository.getUsersStepsCountFromSpecificDate("2020-10-07")
         viewModelScope.launch(Dispatchers.IO) {}
     }
 
