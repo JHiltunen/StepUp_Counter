@@ -44,8 +44,8 @@ interface HealthDao {
     //@Query("SELECT * FROM body_mass_index WHERE date = :date AND id = :id")
     //fun getUsersBodyMassIndexFromSpecificDate(date: String, id: Float): BodyMassIndex
 
-    //@Query("SELECT * FROM body_mass_index WHERE id = :id")
-    //fun getUsersAllBodyMassIndexes(id: Float): LiveData<List<BodyMassIndex>>
+    @Query("SELECT * FROM body_mass_index WHERE id = :id")
+    fun getUsersAllBodyMassIndexes(id: Long): LiveData<List<BodyMassIndex>>
 
     /**
      * Adds new steps to database.

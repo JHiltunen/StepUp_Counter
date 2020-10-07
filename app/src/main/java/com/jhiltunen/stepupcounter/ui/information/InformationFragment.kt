@@ -71,10 +71,25 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
             } else {
                 gender = "Female"
             }
-            var bmi =
+
+            var weightAsInt : Int = Integer.valueOf(weight.text.toString())
+            var heightAsInt : Int = Integer.valueOf(height.text.toString())
+
+            var bmi = (weightAsInt.toFloat() / (heightAsInt.toFloat() / 100.0).pow(2))
+            Log.d("BMI", "onViewCreated: BMI-> $bmi")
             // update users data
-            informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()), username.text.toString(), Integer.valueOf(height.text.toString()), Integer.valueOf(weight.text.toString()), gender))
-            informationViewModel.updateBodyMassIndex(BodyMassIndex(0, SimpleDateFormat("yyyy-MM-dd").format(Date()), (weight.text.toString().toFloat() / (height.toString().toFloat() / 100.0).pow(2)), sharedPreferenceManager.loadUserId(requireContext())))
+            informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()),
+                username = username.text.toString(),
+                height = heightAsInt,
+                weight = weightAsInt,
+                gender = gender
+            ))
+            informationViewModel.updateBodyMassIndex(BodyMassIndex(
+                id = 0,
+                date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
+                bodyMassIndex = bmi,
+                userId = sharedPreferenceManager.loadUserId(requireContext())
+            ))
         }
     }
 }

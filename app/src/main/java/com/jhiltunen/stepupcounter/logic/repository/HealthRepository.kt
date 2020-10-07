@@ -29,6 +29,10 @@ class HealthRepository(private val healthDao: HealthDao, var id: Long) {
         healthDao.addBodyMassIndexToDate(bodyMassIndex)
     }
 
+    fun getUsersAllBodyMassIndexes(): LiveData<List<BodyMassIndex>> {
+        return healthDao.getUsersAllBodyMassIndexes(id)
+    }
+
     fun getUsersStepsCountFromSpecificDate(date: String): LiveData<Int> {
         Log.d("HealthRepository", "getUsersStepsCountFromSpecificDate: userid=$id")
         Log.d("HealthRepository", "getUsersStepsCountFromSpecificDate: date=$date")

@@ -53,13 +53,13 @@ class MainActivity : AppCompatActivity() {
             // update appFirstLaunch to false
             appFirstLaunch = false
             // save appFirstLaunch boolean to SharedPreferences
-            sharedPreferencesManager.saveIsFirstLaunch(applicationContext, appFirstLaunch)
 
             // create new intent to ask user basic info (username, height, weight, gender)
             val i = Intent(this, UserInfoPopup::class.java)
             startActivity(i)
             // call finnish function to prevent navigating back to same view
             finish()
+            sharedPreferencesManager.saveIsFirstLaunch(applicationContext, appFirstLaunch)
         }
 
         // Since API level 29 we are required to ask the user for ACTIVITY_RECOGNITION at runtime.
