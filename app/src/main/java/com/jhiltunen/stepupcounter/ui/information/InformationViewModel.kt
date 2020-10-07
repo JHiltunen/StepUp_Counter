@@ -52,6 +52,10 @@ class InformationViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    /**
+     * Function to update bodyMassIndex.
+     * @param bodyMassIndex BodyMassIndex object that contains updated data.
+     */
     fun updateBodyMassIndex(bodyMassIndex: BodyMassIndex) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBodyMassIndexToDate(bodyMassIndex)

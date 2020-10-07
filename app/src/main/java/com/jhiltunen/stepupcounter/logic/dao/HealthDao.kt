@@ -7,11 +7,17 @@ import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 
 /**
- * Defines SQL commands user is able to use for database.
+ * Defines SQL commands for the app to use for database.
+ * Runs queries against Room database.
  */
 @Dao
 interface HealthDao {
 
+    /**
+     * Function to insert new user's data and after insert add zero steps to current date for the specific user.
+     * @param user User object containing all user information.
+     * @param date Represents current date.
+     */
     @Transaction
     suspend fun insertIntoUsersAndInitializeSteps(user: User, date: String): Long {
         var id = addUser(user)
@@ -35,15 +41,31 @@ interface HealthDao {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateUser(user: User)
 
+    /**
+     * Adds body mass index value to specific date.
+     * @param bodyMassIndex BodyMassIndex object
+     */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addBodyMassIndexToDate(bodyMassIndex: BodyMassIndex)
 
+    /**
+     * Updates body mass index table row.
+     * @param bodyMassIndex BodyMassIndex object.
+     */
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateCurrentDateBodyMassIndex(bodyMassIndex: BodyMassIndex)
 
-    //@Query("SELECT * FROM body_mass_index WHERE date = :date AND id = :id")
-    //fun getUsersBodyMassIndexFromSpecificDate(date: String, id: Float): BodyMassIndex
+    /**
+     * Query to fetch users body mass index from specific date.
+     * @param date Represents current date
+     */
+    @Query("SELECT * FROM body_mass_index WHERE date = :date AND id = :id")
+    fun getUsersBodyMassIndexFromSpecificDate(date: String, id: Float): BodyMassIndex
 
+    /**
+     * Query to fetch users all body mass indexes.
+     * @param id Id of the user.
+     */
     @Query("SELECT * FROM body_mass_index WHERE id = :id")
     fun getUsersAllBodyMassIndexes(id: Long): LiveData<List<BodyMassIndex>>
 

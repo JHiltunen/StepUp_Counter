@@ -9,7 +9,6 @@ import android.icu.text.DecimalFormat
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ListAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -84,8 +83,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
                 setProgressWithAnimation(it.toFloat())
             }
         })
-      
-        homeViewModel.getAllBodymAssIndexes.observe(viewLifecycleOwner, {
+
+        // observe body_mass_index table
+        homeViewModel.getAllBodyMassIndexes.observe(viewLifecycleOwner, {
             adapter.setData(it)
         })
 

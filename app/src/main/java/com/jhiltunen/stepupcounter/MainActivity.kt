@@ -50,10 +50,6 @@ class MainActivity : AppCompatActivity() {
         // if it is users first launch of app
         // then create new intent and ask basic user information
         if (appFirstLaunch) {
-            // update appFirstLaunch to false
-            appFirstLaunch = false
-            // save appFirstLaunch boolean to SharedPreferences
-
             // create new intent to ask user basic info (username, height, weight, gender)
             val i = Intent(this, UserInfoPopup::class.java)
             startActivity(i)

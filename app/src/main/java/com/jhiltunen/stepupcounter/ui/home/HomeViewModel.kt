@@ -32,7 +32,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     // LiveData is used to observe changes to user information and users steps count
     val getUser: LiveData<User>
     val getUsersStepsCountFromSpecificDate: LiveData<Int>
-    val getAllBodymAssIndexes: LiveData<List<BodyMassIndex>>
+    val getAllBodyMassIndexes: LiveData<List<BodyMassIndex>>
 
     /**
      * Initialize view model and required variables
@@ -46,7 +46,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         getUser = repository.getUser
         // get users steps count as LiveData (can be observed) from specific date
         getUsersStepsCountFromSpecificDate = repository.getUsersStepsCountFromSpecificDate(sdf.format(Date()))
-        getAllBodymAssIndexes = repository.getUsersAllBodyMassIndexes()
+        getAllBodyMassIndexes = repository.getUsersAllBodyMassIndexes()
     }
 
     /**

@@ -69,6 +69,7 @@ class UserInfoPopup : AppCompatActivity() {
 
             // add user to database
             userInfoPopupViewModel.addUser(user)
+            sharedPreferencesManager.saveIsFirstLaunch(applicationContext, false)
             // create new intent to start MainActivity again
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
