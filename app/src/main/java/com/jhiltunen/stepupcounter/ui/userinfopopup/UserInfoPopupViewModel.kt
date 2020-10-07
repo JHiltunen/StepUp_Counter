@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.jhiltunen.stepupcounter.data.database.HealthDatabase
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.repository.HealthRepository
@@ -15,6 +16,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.pow
 
 /**
  * Represents view model for UserInfoPopup.
@@ -45,6 +47,8 @@ class UserInfoPopupViewModel (application: Application) : AndroidViewModel(appli
             // addUser function returns id that's given to new user
             // new users id is saved to sharedPreferences by calling saveUserId
             sharedPreferencesManager.saveUserId(getApplication<Application>().applicationContext, repository.insertIntoUsersAndInitializeSteps(user, SimpleDateFormat("yyyy-MM-dd").format(Date())))
+
+            repository.addBodyMassIndexToDate(BodyMassIndex(0, SimpleDateFormat("yyyy-MM-dd").format(Date()), (user.weight.toFloat() / (user.height.toFloat() / 100.0).pow(2)), sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext)))
         }
     }
 }

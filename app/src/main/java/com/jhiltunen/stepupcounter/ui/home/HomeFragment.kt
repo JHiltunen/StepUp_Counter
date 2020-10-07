@@ -9,13 +9,17 @@ import android.icu.text.DecimalFormat
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ListAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.mikhaellopez.circularprogressbar.CircularProgressBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.ui.home.adapter.BmiListAdapter
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.math.pow
 
@@ -29,6 +33,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     private lateinit var tvStepsCount : TextView
     private lateinit var bmiValue : TextView
     private lateinit var circularProgressBar : CircularProgressBar
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: BmiListAdapter
     private var sharedPreferencesManager = SharedPreferencesManager()
 
     // count number of steps as float value because progress bar animation needs float values
@@ -49,6 +55,16 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         // find the TextView element that shows value of users bmi
         bmiValue = view.findViewById(R.id.bmiValue)
 
+        // recycler view
+        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+
+
+        adapter = BmiListAdapter()
+        recyclerView.adapter = this.adapter
+
+
         // observe users table on database for changes
         // if data on users table changes -> bmi is calculated and updated to UI
         homeViewModel.getUser.observe(viewLifecycleOwner, {
@@ -68,11 +84,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
                 setProgressWithAnimation(it.toFloat())
             }
         })
-
+      
+        homeViewModel.getAllBodymAssIndexes.observe(viewLifecycleOwner, {
+            adapter.setData(it)
+        })
 
         if (!sharedPreferencesManager.loadIsFirstLaunch(requireContext().applicationContext)) {
             homeViewModel.checkIfDateHasChanged()
         }
+
     }
 
     @InternalCoroutinesApi
@@ -122,7 +142,10 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             // "!!" makes sure that sensor value is not retrieved from null event
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
 
-            sharedPreferencesManager.saveSensorValueToSharedPreferences(requireContext().applicationContext, totalStepsSinceLastRebootOfDevice)
+            sharedPreferencesManager.saveSensorValueToSharedPreferences(
+                requireContext().applicationContext,
+                totalStepsSinceLastRebootOfDevice
+            )
             //homeViewModel.repeatFun(totalStepsSinceLastRebootOfDevice)
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")

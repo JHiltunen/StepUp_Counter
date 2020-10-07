@@ -64,7 +64,7 @@ class UserInfoPopup : AppCompatActivity() {
 
         //Check that the form is complete (no empty fields) before submitting data to the database
         if (!(username.isEmpty() || height == 0 || weight == 0 || gender.isEmpty())) {
-           // create new user object
+            // create new user object
             val user = User(0, username, height, weight, gender)
 
             // add user to database

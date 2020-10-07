@@ -5,12 +5,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.jhiltunen.stepupcounter.data.database.HealthDatabase
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.repository.HealthRepository
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Presents view model for Information fragment.
@@ -46,6 +49,12 @@ class InformationViewModel(application: Application) : AndroidViewModel(applicat
         // to prevent running database queries on Main Thread
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateUser(user)
+        }
+    }
+
+    fun updateBodyMassIndex(bodyMassIndex: BodyMassIndex) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBodyMassIndexToDate(bodyMassIndex)
         }
     }
 }

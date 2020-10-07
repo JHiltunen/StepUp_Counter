@@ -9,10 +9,14 @@ import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.android.synthetic.main.activity_user_info_popup.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.pow
 
 class InformationFragment : Fragment(R.layout.fragment_information) {
 
@@ -67,8 +71,25 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
             } else {
                 gender = "Female"
             }
+
+            var weightAsInt : Int = Integer.valueOf(weight.text.toString())
+            var heightAsInt : Int = Integer.valueOf(height.text.toString())
+
+            var bmi = (weightAsInt.toFloat() / (heightAsInt.toFloat() / 100.0).pow(2))
+            Log.d("BMI", "onViewCreated: BMI-> $bmi")
             // update users data
-            informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()), username.text.toString(), Integer.valueOf(height.text.toString()), Integer.valueOf(weight.text.toString()), gender))
+            informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()),
+                username = username.text.toString(),
+                height = heightAsInt,
+                weight = weightAsInt,
+                gender = gender
+            ))
+            informationViewModel.updateBodyMassIndex(BodyMassIndex(
+                id = 0,
+                date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
+                bodyMassIndex = bmi,
+                userId = sharedPreferenceManager.loadUserId(requireContext())
+            ))
         }
     }
 }

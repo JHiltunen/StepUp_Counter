@@ -2,6 +2,7 @@ package com.jhiltunen.stepupcounter.logic.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 
@@ -33,6 +34,18 @@ interface HealthDao {
      */
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateUser(user: User)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addBodyMassIndexToDate(bodyMassIndex: BodyMassIndex)
+
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun updateCurrentDateBodyMassIndex(bodyMassIndex: BodyMassIndex)
+
+    //@Query("SELECT * FROM body_mass_index WHERE date = :date AND id = :id")
+    //fun getUsersBodyMassIndexFromSpecificDate(date: String, id: Float): BodyMassIndex
+
+    @Query("SELECT * FROM body_mass_index WHERE id = :id")
+    fun getUsersAllBodyMassIndexes(id: Long): LiveData<List<BodyMassIndex>>
 
     /**
      * Adds new steps to database.

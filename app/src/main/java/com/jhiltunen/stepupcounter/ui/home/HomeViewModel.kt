@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.jhiltunen.stepupcounter.data.database.HealthDatabase
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.repository.HealthRepository
@@ -31,6 +32,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     // LiveData is used to observe changes to user information and users steps count
     val getUser: LiveData<User>
     val getUsersStepsCountFromSpecificDate: LiveData<Int>
+    val getAllBodymAssIndexes: LiveData<List<BodyMassIndex>>
 
     /**
      * Initialize view model and required variables
@@ -43,9 +45,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         // get users information as LiveData (can be observed) from database
         getUser = repository.getUser
         // get users steps count as LiveData (can be observed) from specific date
-        Log.d(TAG, ": ${repository.getUsersStepsCountFromSpecificDate("2020-10-07")}")
-        getUsersStepsCountFromSpecificDate = repository.getUsersStepsCountFromSpecificDate("2020-10-07")
-        viewModelScope.launch(Dispatchers.IO) {}
+        getUsersStepsCountFromSpecificDate = repository.getUsersStepsCountFromSpecificDate(sdf.format(Date()))
+        getAllBodymAssIndexes = repository.getUsersAllBodyMassIndexes()
     }
 
     /**

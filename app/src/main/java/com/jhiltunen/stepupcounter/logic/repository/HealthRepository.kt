@@ -2,6 +2,7 @@ package com.jhiltunen.stepupcounter.logic.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.dao.HealthDao
@@ -22,6 +23,14 @@ class HealthRepository(private val healthDao: HealthDao, var id: Long) {
 
     suspend fun updateUser(user: User) {
         healthDao.updateUser(user)
+    }
+
+    suspend fun addBodyMassIndexToDate(bodyMassIndex: BodyMassIndex) {
+        healthDao.addBodyMassIndexToDate(bodyMassIndex)
+    }
+
+    fun getUsersAllBodyMassIndexes(): LiveData<List<BodyMassIndex>> {
+        return healthDao.getUsersAllBodyMassIndexes(id)
     }
 
     fun getUsersStepsCountFromSpecificDate(date: String): LiveData<Int> {
@@ -54,5 +63,9 @@ class HealthRepository(private val healthDao: HealthDao, var id: Long) {
 
     suspend fun updateSteps(steps: Steps) {
         healthDao.updateSteps(steps)
+    }
+
+    suspend fun updateBodyMassIndexToDate(bodyMassIndex: BodyMassIndex) {
+        healthDao.updateCurrentDateBodyMassIndex(bodyMassIndex)
     }
 }
