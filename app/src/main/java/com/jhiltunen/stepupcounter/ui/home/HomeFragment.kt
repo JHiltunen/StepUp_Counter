@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable.isActive
@@ -32,6 +33,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
     private lateinit var tvStepsCount : TextView
     private lateinit var bmiValue : TextView
     private lateinit var circularProgressBar : CircularProgressBar
+    private var sharedPreferencesManager = SharedPreferencesManager()
 
     // count number of steps as float value because progress bar animation needs float values
     private var totalStepsSinceLastRebootOfDevice= 0f
@@ -70,11 +72,22 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
                 setProgressWithAnimation(it.toFloat())
             }
         })
+        homeViewModel.repeatFun()
     }
 
     @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
+        homeViewModel.getUsersStepsCountFromSpecificDate.observe(viewLifecycleOwner, {
+            tvStepsCount.text = it.toString()
+            // set max value for progressbar
+            circularProgressBar.progressMax = 16500f
+            // update progressbar animation
+            circularProgressBar.apply {
+                setProgressWithAnimation(it.toFloat())
+            }
+        })
+
         running = true
         // get the Step Counter sensor from sensormanager
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
@@ -93,6 +106,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
             Log.d(TAG, "Added listener")
         }
+        homeViewModel.repeatFun()
     }
 
     /**
@@ -105,6 +119,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
             // "!!" makes sure that sensor value is not retrieved from null event
             totalStepsSinceLastRebootOfDevice = event!!.values[0]
 
+            sharedPreferencesManager.saveSensorValueToSharedPreferences(requireContext().applicationContext, totalStepsSinceLastRebootOfDevice)
             //homeViewModel.repeatFun(totalStepsSinceLastRebootOfDevice)
 
             Log.d(TAG, "Sensorin arvo: $totalStepsSinceLastRebootOfDevice")

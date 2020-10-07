@@ -127,16 +127,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /*fun repeatFun(totalStepsSinceLastRebootOfDevice: Float): Job {
+    fun repeatFun(): Job {
         return viewModelScope.launch(Dispatchers.IO) {
             while(NonCancellable.isActive) {
                 val lastDate : Date = repository.getUsersLastSavedDate()
                 if (!lastDateIsSameAsCurrentDate(lastDate, Date())) {
                     // last date not same as current date
-                    repository.addSteps(Steps(0, sdf.format(Date()), 0, totalStepsSinceLastRebootOfDevice.toInt(), sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext)))
+                    repository.addSteps(Steps(0, sdf.format(Date()), 0, sharedPreferencesManager.loadTotalStepsSinceLastRebootOfDevice(getApplication<Application>().applicationContext).toInt(), sharedPreferencesManager.loadUserId(getApplication<Application>().applicationContext)))
                 }
-                delay(1000)
+                delay(60000)
             }
         }
-    }*/
+    }
 }

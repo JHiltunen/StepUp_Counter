@@ -16,6 +16,7 @@ class SharedPreferencesManager {
     private val userPreferencesKey = "userId"
     private val firstLaunchPreference = "firstLaunch"
     private val firstLaunchPreferencesKey = "isFirstLaunch"
+    private val totalStepsSinceLastRebootOfDeviceKey = "totalStepsSinceLastRebootOfDevice"
 
     /**
      * Function to load saved userId from shared preference.
@@ -57,5 +58,24 @@ class SharedPreferencesManager {
         val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
         // return boolean value
         return sp.getBoolean(firstLaunchPreferencesKey, true)
+    }
+
+    fun saveSensorValueToSharedPreferences(context: Context, totalStepsSinceLastRebootOfDevice: Float) {
+        // get SharedPreferences
+        val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
+        // edit
+        sp.edit().apply{
+            // put boolean value
+            putFloat(totalStepsSinceLastRebootOfDeviceKey, totalStepsSinceLastRebootOfDevice)
+            // apply and save data
+            apply()
+        }
+    }
+
+    fun loadTotalStepsSinceLastRebootOfDevice(context: Context): Float {
+        // get SharedPreferences
+        val sp = context.getSharedPreferences(firstLaunchPreference, AppCompatActivity.MODE_PRIVATE)
+        // return boolean value
+        return sp.getFloat(totalStepsSinceLastRebootOfDeviceKey, 0f)
     }
 }
