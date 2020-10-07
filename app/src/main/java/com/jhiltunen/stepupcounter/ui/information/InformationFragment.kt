@@ -9,10 +9,14 @@ import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.android.synthetic.main.activity_user_info_popup.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.pow
 
 class InformationFragment : Fragment(R.layout.fragment_information) {
 
@@ -67,8 +71,10 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
             } else {
                 gender = "Female"
             }
+            var bmi =
             // update users data
             informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()), username.text.toString(), Integer.valueOf(height.text.toString()), Integer.valueOf(weight.text.toString()), gender))
+            informationViewModel.updateBodyMassIndex(BodyMassIndex(0, SimpleDateFormat("yyyy-MM-dd").format(Date()), (weight.text.toString().toFloat() / (height.toString().toFloat() / 100.0).pow(2)), sharedPreferenceManager.loadUserId(requireContext())))
         }
     }
 }

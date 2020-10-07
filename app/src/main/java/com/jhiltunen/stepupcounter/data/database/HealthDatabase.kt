@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.dao.HealthDao
 import kotlinx.coroutines.InternalCoroutinesApi
 
-@Database(entities = [User::class, Steps::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, Steps::class, BodyMassIndex::class], version = 1, exportSchema = false)
 abstract class HealthDatabase: RoomDatabase() {
 
     abstract fun healthDao() : HealthDao

@@ -1,6 +1,7 @@
 package com.jhiltunen.stepupcounter.ui.userinfopopup
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -8,9 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.jhiltunen.stepupcounter.MainActivity
 import com.jhiltunen.stepupcounter.R
+import com.jhiltunen.stepupcounter.data.models.Steps
 import com.jhiltunen.stepupcounter.data.models.User
+import com.jhiltunen.stepupcounter.utils.SharedPreferencesManager
 import kotlinx.android.synthetic.main.activity_user_info_popup.*
 import kotlinx.coroutines.InternalCoroutinesApi
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * UserInfoPopup will be shown at app first launch.
@@ -21,6 +26,7 @@ class UserInfoPopup : AppCompatActivity() {
 
     @InternalCoroutinesApi
     private lateinit var userInfoPopupViewModel: UserInfoPopupViewModel
+    private var sharedPreferencesManager = SharedPreferencesManager()
 
     private var username : String = ""
     private var weight : Int = 0
@@ -58,12 +64,11 @@ class UserInfoPopup : AppCompatActivity() {
 
         //Check that the form is complete (no empty fields) before submitting data to the database
         if (!(username.isEmpty() || height == 0 || weight == 0 || gender.isEmpty())) {
-           // create new user object
+            // create new user object
             val user = User(0, username, height, weight, gender)
 
             // add user to database
             userInfoPopupViewModel.addUser(user)
-
             // create new intent to start MainActivity again
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
