@@ -4,7 +4,7 @@
     <string name="title_analytics">Analytics</string>
     <string name="title_information">Information</string>
     <string name="stepCount_default">0</string>
-    <string name="stepGoal_default">2500</string>
+    <string name="stepGoal_default">10000</string>
     <string name="height_cm">Height (cm)</string>
     <string name="weight_kg">Weight (kg)</string>
     <string name="text_gender">"Gender: "</string>

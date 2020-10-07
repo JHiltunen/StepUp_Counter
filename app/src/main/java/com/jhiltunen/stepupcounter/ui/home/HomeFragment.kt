@@ -62,7 +62,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SensorEventListener {
         homeViewModel.getUsersStepsCountFromSpecificDate.observe(viewLifecycleOwner, {
             tvStepsCount.text = it.toString()
             // set max value for progressbar
-            circularProgressBar.progressMax = 16500f
+            circularProgressBar.progressMax = 10000f
             // update progressbar animation
             circularProgressBar.apply {
                 setProgressWithAnimation(it.toFloat())
