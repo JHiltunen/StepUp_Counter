@@ -15,6 +15,9 @@ import java.util.Date
  */
 class HealthRepository(private val healthDao: HealthDao, var id: Long) {
 
+    /**
+     * Get observable LiveData of users information
+     */
     val getUser: LiveData<User> = healthDao.getUser(id)
 
     /**

@@ -11,7 +11,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.jhiltunen.stepupcounter.data.models.BodyMassIndex
 
-
+/**
+ * Adapter for list view.
+ */
 class BmiListAdapter : RecyclerView.Adapter<BmiListAdapter.MyViewHolder>() {
 
     var bodyMassIndexes: List<BodyMassIndex> = emptyList<BodyMassIndex>()

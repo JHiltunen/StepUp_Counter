@@ -4,6 +4,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+/**
+ * Represents database body_mass_index table.
+ * @param id That's generated automatically.
+ * @param date Date when body mass index value is recorded.
+ * @param userId Foreignkey reference to users table id
+ */
 @Entity(tableName = "body_mass_index", foreignKeys = [ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("userId"), onDelete = ForeignKey.CASCADE)])
 data class BodyMassIndex (
     @PrimaryKey(autoGenerate = true)

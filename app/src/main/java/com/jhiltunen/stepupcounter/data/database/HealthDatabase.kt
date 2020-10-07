@@ -10,6 +10,10 @@ import com.jhiltunen.stepupcounter.data.models.User
 import com.jhiltunen.stepupcounter.logic.dao.HealthDao
 import kotlinx.coroutines.InternalCoroutinesApi
 
+/**
+ * Contains Room database structure.
+ * Returns new database instance when new HealthDao object is created.
+ */
 @Database(entities = [User::class, Steps::class, BodyMassIndex::class], version = 1, exportSchema = false)
 abstract class HealthDatabase: RoomDatabase() {
 
