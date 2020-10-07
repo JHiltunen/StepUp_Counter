@@ -84,7 +84,7 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
                 weight = weightAsInt,
                 gender = gender
             ))
-            informationViewModel.updateBodyMassIndex(BodyMassIndex(
+            informationViewModel.addBodyMassIndex(BodyMassIndex(
                 id = 0,
                 date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
                 bodyMassIndex = bmi,
