@@ -52,33 +52,49 @@ class UserInfoPopup : AppCompatActivity() {
     private fun addUserToDB() {
         // get text from editTexts
         username = et_username.text.toString()
-        if (et_height.text.isNotEmpty() && et_weight.text.isNotEmpty()) {
+
+        if (username.isEmpty() || et_weight.text.isEmpty() || et_height.text.isEmpty()) {
+            Toast.makeText(applicationContext, "Please fill all fields", Toast.LENGTH_SHORT).show()
+        } else {
             height = Integer.valueOf(et_height.text.toString())
             weight = Integer.valueOf(et_weight.text.toString())
-        }
 
-        // set user gender by comparing checked radio button id
-        if (genderGroup.checkedRadioButtonId == male.id) {
-            gender = "Male"
-        } else {
-            gender = "Female"
-        }
+            var dataIsValid: Boolean
 
-        //Check that the form is complete (no empty fields) before submitting data to the database
-        if (!(username.isEmpty() || height == 0 || weight == 0 || gender.isEmpty())) {
-            // create new user object
-            val user = User(0, username, height, weight, gender)
+            if (weight > 500) {
+                Toast.makeText(applicationContext, "Weight should be 0-500", Toast.LENGTH_SHORT).show()
+                dataIsValid = false
+            } else {
+                dataIsValid = true
+            }
 
-            // add user to database
-            userInfoPopupViewModel.addUser(user)
-            sharedPreferencesManager.saveIsFirstLaunch(applicationContext, false)
-            // create new intent to start MainActivity again
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            // call finnish function to prevent navigating back to same view and close this activity
-            finish()
-        } else {
-            Toast.makeText(applicationContext, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+            if (height > 250) {
+                Toast.makeText(applicationContext, "Height should be 0-250", Toast.LENGTH_SHORT).show()
+                dataIsValid = false
+            } else {
+                dataIsValid = true
+            }
+
+            if (dataIsValid) {
+                // set user gender by comparing checked radio button id
+                if (genderGroup.checkedRadioButtonId == male.id) {
+                    gender = "Male"
+                } else {
+                    gender = "Female"
+                }
+
+                // create new user object
+                val user = User(0, username, height, weight, gender)
+
+                // add user to database
+                userInfoPopupViewModel.addUser(user)
+                sharedPreferencesManager.saveIsFirstLaunch(applicationContext, false)
+                // create new intent to start MainActivity again
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+                // call finnish function to prevent navigating back to same view and close this activity
+                finish()
+            }
         }
     }
 }

@@ -73,27 +73,45 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
                 gender = "Female"
             }
 
-            if (username.text.isNotEmpty() && weight.text.isNotEmpty() && height.text.isNotEmpty()) {
+            if (username.text.isEmpty() || weight.text.isEmpty() || height.text.isEmpty()) {
+                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+            } else {
                 var weightAsInt : Int = Integer.valueOf(weight.text.toString())
                 var heightAsInt : Int = Integer.valueOf(height.text.toString())
 
-                var bmi = (weightAsInt.toFloat() / (heightAsInt.toFloat() / 100.0).pow(2))
-                Log.d("BMI", "onViewCreated: BMI-> $bmi")
-                // update users data
-                informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()),
-                    username = username.text.toString(),
-                    height = heightAsInt,
-                    weight = weightAsInt,
-                    gender = gender
-                ))
-                informationViewModel.addBodyMassIndex(BodyMassIndex(
-                    id = 0,
-                    date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
-                    bodyMassIndex = bmi,
-                    userId = sharedPreferenceManager.loadUserId(requireContext())
-                ))
-            } else {
-                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                var dataIsValid: Boolean
+
+                if (weightAsInt > 500) {
+                    Toast.makeText(context, "Weight should be 0-500", Toast.LENGTH_SHORT).show()
+                    dataIsValid = false
+                } else {
+                    dataIsValid = true
+                }
+
+                if (heightAsInt > 250) {
+                    Toast.makeText(context, "Height should be 0-250", Toast.LENGTH_SHORT).show()
+                    dataIsValid = false
+                } else {
+                    dataIsValid = true
+                }
+
+                if (dataIsValid) {
+                    var bmi = (weightAsInt.toFloat() / (heightAsInt.toFloat() / 100.0).pow(2))
+                    Log.d("BMI", "onViewCreated: BMI-> $bmi")
+                    // update users data
+                    informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()),
+                        username = username.text.toString(),
+                        height = heightAsInt,
+                        weight = weightAsInt,
+                        gender = gender
+                    ))
+                    informationViewModel.addBodyMassIndex(BodyMassIndex(
+                        id = 0,
+                        date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
+                        bodyMassIndex = bmi,
+                        userId = sharedPreferenceManager.loadUserId(requireContext())
+                    ))
+                }
             }
         }
     }
