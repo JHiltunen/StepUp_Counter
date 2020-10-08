@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jhiltunen.stepupcounter.R
@@ -72,24 +73,28 @@ class InformationFragment : Fragment(R.layout.fragment_information) {
                 gender = "Female"
             }
 
-            var weightAsInt : Int = Integer.valueOf(weight.text.toString())
-            var heightAsInt : Int = Integer.valueOf(height.text.toString())
+            if (username.text.isNotEmpty() && weight.text.isNotEmpty() && height.text.isNotEmpty()) {
+                var weightAsInt : Int = Integer.valueOf(weight.text.toString())
+                var heightAsInt : Int = Integer.valueOf(height.text.toString())
 
-            var bmi = (weightAsInt.toFloat() / (heightAsInt.toFloat() / 100.0).pow(2))
-            Log.d("BMI", "onViewCreated: BMI-> $bmi")
-            // update users data
-            informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()),
-                username = username.text.toString(),
-                height = heightAsInt,
-                weight = weightAsInt,
-                gender = gender
-            ))
-            informationViewModel.addBodyMassIndex(BodyMassIndex(
-                id = 0,
-                date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
-                bodyMassIndex = bmi,
-                userId = sharedPreferenceManager.loadUserId(requireContext())
-            ))
+                var bmi = (weightAsInt.toFloat() / (heightAsInt.toFloat() / 100.0).pow(2))
+                Log.d("BMI", "onViewCreated: BMI-> $bmi")
+                // update users data
+                informationViewModel.updateUser(User(sharedPreferenceManager.loadUserId(requireContext()),
+                    username = username.text.toString(),
+                    height = heightAsInt,
+                    weight = weightAsInt,
+                    gender = gender
+                ))
+                informationViewModel.addBodyMassIndex(BodyMassIndex(
+                    id = 0,
+                    date = SimpleDateFormat("yyyy-MM-dd").format(Date()),
+                    bodyMassIndex = bmi,
+                    userId = sharedPreferenceManager.loadUserId(requireContext())
+                ))
+            } else {
+                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
