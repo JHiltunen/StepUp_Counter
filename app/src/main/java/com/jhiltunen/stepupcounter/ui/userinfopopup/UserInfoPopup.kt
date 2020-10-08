@@ -52,8 +52,10 @@ class UserInfoPopup : AppCompatActivity() {
     private fun addUserToDB() {
         // get text from editTexts
         username = et_username.text.toString()
-        height = Integer.valueOf(et_height.text.toString())
-        weight = Integer.valueOf(et_weight.text.toString())
+        if (et_height.text.isNotEmpty() && et_weight.text.isNotEmpty()) {
+            height = Integer.valueOf(et_height.text.toString())
+            weight = Integer.valueOf(et_weight.text.toString())
+        }
 
         // set user gender by comparing checked radio button id
         if (genderGroup.checkedRadioButtonId == male.id) {
